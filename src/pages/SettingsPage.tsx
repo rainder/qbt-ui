@@ -1,3 +1,6 @@
+import { SettingsLayout } from '@/components/Settings/SettingsLayout';
+import { PluginsTab } from '@/components/Settings/tabs/Plugins';
+
 export default function SettingsPage() {
-  return <div className="p-4">Settings</div>;
+  return <SettingsLayout pluginsTab={<PluginsTab />} />;
 }
