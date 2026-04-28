@@ -1,5 +1,6 @@
 import { useSync } from '@/hooks/useSync';
 import { TorrentTable } from '@/components/List/TorrentTable';
+import { TopBar } from '@/components/Layout/TopBar';
 import { Navigate } from 'react-router-dom';
 
 export default function TorrentListPage() {
@@ -8,7 +9,7 @@ export default function TorrentListPage() {
 
   return (
     <div className="h-screen flex flex-col">
-      <div className="px-3 h-11 border-b border-border flex items-center text-fg2">qbt</div>
+      <TopBar serverState={state.serverState} />
       <div className="flex-1 min-h-0">
         <TorrentTable torrents={state.torrents} />
       </div>
