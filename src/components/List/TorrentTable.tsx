@@ -13,7 +13,9 @@ import {
 
 export function TorrentTable({ rows }: { rows: Partial<Torrent>[] }) {
   const { openDetails, activeHash, openModal } = useUi();
-  const { has, selectOnly, toggle, hashes } = useSelection();
+  const { has, selectOnly, toggle, selectRange, hashes } = useSelection();
+
+  const lastClickedRef = useRef<string | null>(null);
 
   const parentRef = useRef<HTMLDivElement>(null);
   const v = useVirtualizer({
@@ -115,7 +117,18 @@ export function TorrentTable({ rows }: { rows: Partial<Torrent>[] }) {
                   t={t}
                   selected={has(hash)}
                   active={activeHash === hash}
-                  onClick={(e) => (e.metaKey || e.ctrlKey ? toggle(hash) : selectOnly(hash))}
+                  onClick={(e) => {
+                    if (e.shiftKey && lastClickedRef.current) {
+                      const orderedHashes = rows.map((r) => r.hash!).filter(Boolean);
+                      selectRange(orderedHashes, lastClickedRef.current, hash);
+                    } else if (e.metaKey || e.ctrlKey) {
+                      toggle(hash);
+                      lastClickedRef.current = hash;
+                    } else {
+                      selectOnly(hash);
+                      lastClickedRef.current = hash;
+                    }
+                  }}
                   onDouble={() => openDetails(hash)}
                   onContextMenu={(e) => onContextMenu(e, hash)}
                 />

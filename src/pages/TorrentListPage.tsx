@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import type { Torrent } from '@/api/types';
 import { useSync } from '@/hooks/useSync';
 import { TorrentTable } from '@/components/List/TorrentTable';
@@ -21,6 +21,12 @@ export default function TorrentListPage() {
   const { state, error, authError } = useSync();
   const ui = useUi();
   const sel = useSelection() as SelMethods;
+
+  // Drag-drop state
+  const [isDragging, setIsDragging] = useState(false);
+  const dragCounterRef = useRef(0);
+  const [dropFiles, setDropFiles] = useState<File[] | undefined>(undefined);
+  const [dropUrl, setDropUrl] = useState<string | undefined>(undefined);
 
   const displayedRows = useMemo(() => {
     const filtered = filterTorrents(state.torrents, {
@@ -56,14 +62,97 @@ export default function TorrentListPage() {
       action: () => ui.openModal('tags') },
     { context: 'list', keys: 'enter', label: 'open details',
       action: () => { const h = sel.hashes()[0]; if (h) ui.openDetails(h); } },
-    { context: 'list', keys: 'esc', label: 'close details',
-      action: () => ui.closeDetails() },
+    { context: 'list', keys: 'esc', label: 'close details or clear selection',
+      action: () => {
+        if (ui.detailsOpen) {
+          ui.closeDetails();
+        } else {
+          useSelection.getState().clear();
+        }
+      } },
   ]);
+
+  // cmd/ctrl+a — select all displayed
+  useEffect(() => {
+    function onKeyDown(e: KeyboardEvent) {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'a') {
+        e.preventDefault();
+        const { selectRange } = useSelection.getState();
+        if (displayedHashes.length > 0) {
+          selectRange(displayedHashes, displayedHashes[0], displayedHashes[displayedHashes.length - 1]);
+        }
+      }
+    }
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [displayedHashes]);
+
+  // Drag-drop handlers
+  function onDragEnter(e: React.DragEvent) {
+    e.preventDefault();
+    dragCounterRef.current += 1;
+    setIsDragging(true);
+  }
+
+  function onDragOver(e: React.DragEvent) {
+    e.preventDefault();
+  }
+
+  function onDragLeave(e: React.DragEvent) {
+    e.preventDefault();
+    dragCounterRef.current -= 1;
+    if (dragCounterRef.current <= 0) {
+      dragCounterRef.current = 0;
+      setIsDragging(false);
+    }
+  }
+
+  function onDrop(e: React.DragEvent) {
+    e.preventDefault();
+    dragCounterRef.current = 0;
+    setIsDragging(false);
+
+    // Check for files
+    const torrentFiles = Array.from(e.dataTransfer.files).filter((f) =>
+      f.name.endsWith('.torrent'),
+    );
+    if (torrentFiles.length > 0) {
+      setDropFiles(torrentFiles);
+      setDropUrl(undefined);
+      ui.openModal('add');
+      return;
+    }
+
+    // Check for dragged text (magnet / http URL)
+    const text = e.dataTransfer.getData('text/plain').trim();
+    if (text && (text.startsWith('magnet:') || text.startsWith('http://') || text.startsWith('https://'))) {
+      setDropUrl(text);
+      setDropFiles(undefined);
+      ui.openModal('add');
+    }
+  }
+
+  function onAddModalClose() {
+    setDropFiles(undefined);
+    setDropUrl(undefined);
+  }
 
   if (authError) return <Navigate to="/login" replace />;
 
   return (
-    <div className="h-screen flex flex-col bg-canvas">
+    <div
+      className="h-screen flex flex-col bg-canvas relative"
+      onDragEnter={onDragEnter}
+      onDragOver={onDragOver}
+      onDragLeave={onDragLeave}
+      onDrop={onDrop}
+    >
+      {isDragging && (
+        <div className="absolute inset-0 z-50 pointer-events-none flex items-center justify-center">
+          <div className="absolute inset-4 border-2 border-dashed border-accent-muted rounded-lg bg-accent-subtle/20" />
+          <span className="relative text-accent-fg text-lg font-medium">Drop to add torrents</span>
+        </div>
+      )}
       <TopBar serverState={state.serverState} />
       <div className="flex-1 min-h-0 flex">
         <Sidebar torrents={state.torrents} categories={state.categories} tags={state.tags} />
@@ -76,7 +165,14 @@ export default function TorrentListPage() {
         </div>
       </div>
       {error && <div className="border-t border-danger-fg text-danger-fg px-4 py-2 text-sm">{error}</div>}
-      {ui.activeModal === 'add' && <AddTorrent categories={Object.keys(state.categories)} />}
+      {ui.activeModal === 'add' && (
+        <AddTorrent
+          categories={Object.keys(state.categories)}
+          initialUrl={dropUrl}
+          initialFiles={dropFiles}
+          onClose={onAddModalClose}
+        />
+      )}
       {ui.activeModal === 'delete' && <ConfirmDelete />}
       {ui.activeModal === 'category' && (
         <SetCategory

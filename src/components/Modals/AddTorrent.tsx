@@ -6,13 +6,19 @@ import { Select } from '@/components/ui/Select';
 const inputCls =
   'block w-full bg-canvas-inset border border-border-default rounded-md px-3 py-[5px] text-sm text-fg-default focus-accent';
 
-export function AddTorrent({ initialUrl = '', categories }: {
+export function AddTorrent({ initialUrl = '', initialFiles, categories, onClose }: {
   initialUrl?: string;
+  initialFiles?: File[];
   categories: string[];
+  onClose?: () => void;
 }) {
-  const close = useCloseModal();
+  const closeModal = useCloseModal();
+  function close() {
+    onClose?.();
+    closeModal();
+  }
   const [urls, setUrls] = useState(initialUrl);
-  const [files, setFiles] = useState<File[]>([]);
+  const [files, setFiles] = useState<File[]>(initialFiles ?? []);
   const [category, setCategory] = useState('');
   const [tags, setTags] = useState('');
   const [paused, setPaused] = useState(false);

@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
 export type SortKey = 'name' | 'size' | 'state' | 'progress' | 'dlspeed' | 'upspeed' | 'eta' | 'added_on' | 'ratio' | 'category';
 export type SortDir = 'asc' | 'desc';
@@ -25,28 +26,43 @@ interface UiState {
   openModal(m: UiState['activeModal']): void;
 }
 
-export const useUi = create<UiState>((set, get) => ({
-  filterStatus: 'all',
-  filterCategory: null,
-  filterTag: null,
-  filterText: '',
-  sortKey: 'added_on',
-  sortDir: 'desc',
-  detailsOpen: false,
-  activeHash: null,
-  activeModal: null,
+export const useUi = create<UiState>()(
+  persist(
+    (set, get) => ({
+      filterStatus: 'all',
+      filterCategory: null,
+      filterTag: null,
+      filterText: '',
+      sortKey: 'added_on',
+      sortDir: 'desc',
+      detailsOpen: false,
+      activeHash: null,
+      activeModal: null,
 
-  setStatus(s) { set({ filterStatus: s }); },
-  setCategory(c) { set({ filterCategory: c }); },
-  setTag(t) { set({ filterTag: t }); },
-  setFilterText(s) { set({ filterText: s }); },
-  setSort(key) {
-    const { sortKey, sortDir } = get();
-    set(sortKey === key
-      ? { sortDir: sortDir === 'asc' ? 'desc' : 'asc' }
-      : { sortKey: key, sortDir: 'desc' });
-  },
-  openDetails(hash) { set({ detailsOpen: true, activeHash: hash }); },
-  closeDetails() { set({ detailsOpen: false }); },
-  openModal(m) { set({ activeModal: m }); },
-}));
+      setStatus(s) { set({ filterStatus: s }); },
+      setCategory(c) { set({ filterCategory: c }); },
+      setTag(t) { set({ filterTag: t }); },
+      setFilterText(s) { set({ filterText: s }); },
+      setSort(key) {
+        const { sortKey, sortDir } = get();
+        set(sortKey === key
+          ? { sortDir: sortDir === 'asc' ? 'desc' : 'asc' }
+          : { sortKey: key, sortDir: 'desc' });
+      },
+      openDetails(hash) { set({ detailsOpen: true, activeHash: hash }); },
+      closeDetails() { set({ detailsOpen: false }); },
+      openModal(m) { set({ activeModal: m }); },
+    }),
+    {
+      name: 'qbt-ui',
+      version: 1,
+      partialize: (state) => ({
+        filterStatus: state.filterStatus,
+        filterCategory: state.filterCategory,
+        filterTag: state.filterTag,
+        sortKey: state.sortKey,
+        sortDir: state.sortDir,
+      }),
+    },
+  ),
+);
