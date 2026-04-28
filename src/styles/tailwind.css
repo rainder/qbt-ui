@@ -79,8 +79,4 @@
     box-shadow: 0 0 0 3px rgba(56, 139, 253, 0.3);
   }
 
-  /* Sidebar active left accent strip */
-  .sidebar-active {
-    box-shadow: inset 2px 0 0 var(--color-accent-fg);
-  }
 }

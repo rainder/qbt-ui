@@ -20,6 +20,7 @@ describe('applyDiff', () => {
     });
     expect(next.rid).toBe(1);
     expect(next.torrents.abc?.name).toBe('a');
+    expect(next.torrents.abc?.hash).toBe('abc');
     expect(next.categories.movies?.savePath).toBe('/m');
     expect(next.tags).toEqual(['linux']);
     expect(next.serverState?.dl_info_speed).toBe(100);

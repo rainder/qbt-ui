@@ -23,9 +23,9 @@ export function TorrentRow({
         active && 'ring-1 ring-inset ring-accent-fg',
       )}
     >
-      <StatusPill state={t.state ?? 'unknown'} />
       <div className="flex-1 truncate font-medium text-fg-default text-sm">{t.name}</div>
       <div className="w-20 text-right tabular-nums text-sm text-fg-default">{formatBytes(t.size ?? 0)}</div>
+      <div className="w-20"><StatusPill state={t.state ?? 'unknown'} /></div>
       <div className="w-28">
         <ProgressBar value={t.progress ?? 0} complete={(t.progress ?? 0) >= 1} />
       </div>

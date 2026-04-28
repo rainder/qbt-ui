@@ -10,11 +10,15 @@ export function TopBar({ serverState }: { serverState?: ServerState }) {
   const loc = useLocation();
   return (
     <div className="h-14 bg-canvas border-b border-border-muted flex items-center px-4 gap-4 shrink-0">
-      {/* Brand */}
-      <div className="flex items-center gap-2 font-semibold text-base text-fg-default shrink-0">
+      {/* Brand — clickable home link */}
+      <Link
+        to="/"
+        className="flex items-center gap-2 font-semibold text-base text-fg-default hover:text-fg-default shrink-0"
+        title="Home"
+      >
         <span className="w-3 h-3 rounded-full bg-accent-fg shrink-0" />
         qbt
-      </div>
+      </Link>
 
       {/* Stats */}
       <div className="flex items-center gap-4 shrink-0">
@@ -35,6 +39,9 @@ export function TopBar({ serverState }: { serverState?: ServerState }) {
       />
 
       {/* Nav links */}
+      <Link to="/" className={navCls(loc.pathname === '/')}>
+        torrents
+      </Link>
       <Link to="/search" className={navCls(loc.pathname === '/search')}>
         search
       </Link>

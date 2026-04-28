@@ -18,7 +18,7 @@ export function applyDiff(prev: SyncState, diff: SyncMainData): SyncState {
   const torrents = { ...start.torrents };
   if (diff.torrents) {
     for (const [hash, patch] of Object.entries(diff.torrents)) {
-      torrents[hash] = { ...torrents[hash], ...patch };
+      torrents[hash] = { ...torrents[hash], ...patch, hash };
     }
   }
   if (diff.torrents_removed) {
