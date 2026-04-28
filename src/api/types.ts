@@ -28,6 +28,8 @@ export interface Torrent {
   amount_left: number;
   uploaded: number;
   downloaded: number;
+  seq_dl: boolean;          // sequential download enabled
+  f_l_piece_prio: boolean;  // download first and last pieces first
 }
 
 export interface SyncMainData {

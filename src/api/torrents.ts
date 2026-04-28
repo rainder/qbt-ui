@@ -47,6 +47,24 @@ export const removeTags = (hashes: string[], tags: string[]) =>
 export const createCategory = (name: string, savePath = '') =>
   apiPost('/torrents/createCategory', { category: name, savePath });
 
+export const toggleSequentialDownload = (hashes: string[]) =>
+  apiPost('/torrents/toggleSequentialDownload', { hashes: hashes.join('|') });
+
+export const toggleFirstLastPiecePrio = (hashes: string[]) =>
+  apiPost('/torrents/toggleFirstLastPiecePrio', { hashes: hashes.join('|') });
+
+/** qBittorrent file priority levels */
+export const FilePriority = {
+  Skip: 0,
+  Normal: 1,
+  High: 6,
+  Maximum: 7,
+} as const;
+export type FilePriorityValue = (typeof FilePriority)[keyof typeof FilePriority];
+
+export const setFilePriority = (hash: string, ids: number[], priority: FilePriorityValue) =>
+  apiPost('/torrents/filePrio', { hash, id: ids.join('|'), priority });
+
 export const fetchFiles = (hash: string) => apiGet<TorrentFile[]>('/torrents/files', { hash });
 export const fetchPeers = (hash: string) =>
   apiGet<{ peers: Record<string, TorrentPeer> }>('/sync/torrentPeers', { hash, rid: 0 });

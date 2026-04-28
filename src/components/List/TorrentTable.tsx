@@ -6,7 +6,10 @@ import { ColumnHeader } from './ColumnHeader';
 import { ContextMenu, type ContextMenuItem } from './ContextMenu';
 import { useSelection } from '@/stores/selection';
 import { useUi } from '@/stores/ui';
-import { pause, resume, recheck, reannounce } from '@/api/torrents';
+import {
+  pause, resume, recheck, reannounce,
+  toggleSequentialDownload, toggleFirstLastPiecePrio,
+} from '@/api/torrents';
 
 export function TorrentTable({ rows }: { rows: Partial<Torrent>[] }) {
   const { openDetails, activeHash, openModal } = useUi();
@@ -32,6 +35,12 @@ export function TorrentTable({ rows }: { rows: Partial<Torrent>[] }) {
     const sel = hashes();
     const count = sel.length || 1; // at least the right-clicked row is selected
     const single = count === 1;
+
+    // Look up state across selected torrents.
+    const torrentsByHash = new Map(rows.map((r) => [r.hash, r]));
+    const allSeq = sel.length > 0 && sel.every((h) => torrentsByHash.get(h)?.seq_dl);
+    const allFL = sel.length > 0 && sel.every((h) => torrentsByHash.get(h)?.f_l_piece_prio);
+
     return [
       {
         label: single ? 'Open details' : `Open first of ${count}`,
@@ -58,6 +67,15 @@ export function TorrentTable({ rows }: { rows: Partial<Torrent>[] }) {
       {
         label: 'Reannounce',
         onClick: () => { void reannounce(sel); },
+      },
+      {
+        label: allSeq ? '✓ Sequential download' : 'Sequential download',
+        onClick: () => { void toggleSequentialDownload(sel); },
+        separatorBefore: true,
+      },
+      {
+        label: allFL ? '✓ First && last piece priority' : 'First && last piece priority',
+        onClick: () => { void toggleFirstLastPiecePrio(sel); },
       },
       {
         label: 'Set category…',
