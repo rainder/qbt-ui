@@ -14,21 +14,33 @@ import { useSelection } from '@/stores/selection';
 import { useKeybinds } from '@/hooks/useKeybinds';
 import { pause, resume, recheck } from '@/api/torrents';
 import { Navigate } from 'react-router-dom';
+import { filterTorrents, sortTorrents } from '@/lib/listOps';
 
 export default function TorrentListPage() {
   const { state, error, authError } = useSync();
   const ui = useUi();
   const sel = useSelection() as SelMethods;
-  const ordered = useMemo(
-    () => Object.values(state.torrents).map((t) => t.hash!).filter(Boolean),
-    [state.torrents],
+
+  const displayedRows = useMemo(() => {
+    const filtered = filterTorrents(state.torrents, {
+      status: ui.filterStatus,
+      category: ui.filterCategory,
+      tag: ui.filterTag,
+      text: ui.filterText,
+    });
+    return sortTorrents(filtered, ui.sortKey, ui.sortDir);
+  }, [state.torrents, ui.filterStatus, ui.filterCategory, ui.filterTag, ui.filterText, ui.sortKey, ui.sortDir]);
+
+  const displayedHashes = useMemo(
+    () => displayedRows.map((t) => t.hash!).filter(Boolean),
+    [displayedRows],
   );
 
   useKeybinds([
     { context: 'list', keys: 'j', label: 'next',
-      action: () => moveCursor(ordered, sel, 1) },
+      action: () => moveCursor(displayedHashes, sel, 1) },
     { context: 'list', keys: 'k', label: 'prev',
-      action: () => moveCursor(ordered, sel, -1) },
+      action: () => moveCursor(displayedHashes, sel, -1) },
     { context: 'list', keys: 'p', label: 'pause',
       action: () => { void pause(sel.hashes()); } },
     { context: 'list', keys: 'r', label: 'resume',
@@ -56,7 +68,7 @@ export default function TorrentListPage() {
         <Sidebar torrents={state.torrents} categories={state.categories} tags={state.tags} />
         <div className="flex-1 min-w-0 flex flex-col">
           <div className="flex-1 min-h-0">
-            <TorrentTable torrents={state.torrents} />
+            <TorrentTable rows={displayedRows} />
           </div>
           {ui.detailsOpen && ui.activeHash && state.torrents[ui.activeHash] &&
             <DetailsPanel torrent={state.torrents[ui.activeHash]!} />}

@@ -1,22 +1,14 @@
-import { useMemo, useRef } from 'react';
+import { useRef } from 'react';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import type { Torrent } from '@/api/types';
 import { TorrentRow } from './TorrentRow';
 import { ColumnHeader } from './ColumnHeader';
 import { useSelection } from '@/stores/selection';
 import { useUi } from '@/stores/ui';
-import { filterTorrents, sortTorrents } from '@/lib/listOps';
 
-export function TorrentTable({ torrents }: { torrents: Record<string, Partial<Torrent>> }) {
-  const { filterStatus, filterCategory, filterTag, filterText, sortKey, sortDir, openDetails, activeHash } = useUi();
+export function TorrentTable({ rows }: { rows: Partial<Torrent>[] }) {
+  const { openDetails, activeHash } = useUi();
   const { has, selectOnly, toggle } = useSelection();
-
-  const rows = useMemo(() => {
-    const filtered = filterTorrents(torrents, {
-      status: filterStatus, category: filterCategory, tag: filterTag, text: filterText,
-    });
-    return sortTorrents(filtered, sortKey, sortDir);
-  }, [torrents, filterStatus, filterCategory, filterTag, filterText, sortKey, sortDir]);
 
   const parentRef = useRef<HTMLDivElement>(null);
   const v = useVirtualizer({
