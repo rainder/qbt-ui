@@ -6,12 +6,18 @@ import { useSelection } from '@/stores/selection';
 const inputCls =
   'block w-full bg-canvas-inset border border-border-default rounded-md px-3 py-[5px] text-sm text-fg-default focus-accent';
 
-export function SetCategory({ categories }: { categories: string[] }) {
+export function SetCategory({ categories, currentCategory }: {
+  categories: string[];
+  /** Shared category across selection. `undefined` means selection has mixed categories. */
+  currentCategory?: string;
+}) {
   const close = useCloseModal();
   const selected = useSelection((s) => s.selected);
   const hashes = Array.from(selected);
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState(currentCategory ?? '');
   const [busy, setBusy] = useState(false);
+
+  const mixed = currentCategory === undefined && hashes.length > 1;
 
   async function submit() {
     setBusy(true);
@@ -30,12 +36,18 @@ export function SetCategory({ categories }: { categories: string[] }) {
             list="cats"
             value={value}
             onChange={(e) => setValue(e.target.value)}
+            placeholder={mixed ? '— mixed —' : 'No category'}
             autoFocus
             className={inputCls}
           />
           <datalist id="cats">
             {categories.map((c) => <option key={c} value={c} />)}
           </datalist>
+          {mixed && (
+            <p className="mt-1 text-xs text-fg-muted">
+              Selection has mixed categories — applying will overwrite all of them.
+            </p>
+          )}
         </div>
         <div className="flex justify-end gap-2 pt-2">
           <button

@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import type { Torrent } from '@/api/types';
 import { useSync } from '@/hooks/useSync';
 import { TorrentTable } from '@/components/List/TorrentTable';
 import { TopBar } from '@/components/Layout/TopBar';
@@ -77,7 +78,12 @@ export default function TorrentListPage() {
       {error && <div className="border-t border-danger-fg text-danger-fg px-4 py-2 text-sm">{error}</div>}
       {ui.activeModal === 'add' && <AddTorrent categories={Object.keys(state.categories)} />}
       {ui.activeModal === 'delete' && <ConfirmDelete />}
-      {ui.activeModal === 'category' && <SetCategory categories={Object.keys(state.categories)} />}
+      {ui.activeModal === 'category' && (
+        <SetCategory
+          categories={Object.keys(state.categories)}
+          currentCategory={sharedCategory(sel.hashes(), state.torrents)}
+        />
+      )}
       {ui.activeModal === 'tags' && <EditTags allTags={state.tags} />}
       {ui.activeModal === 'help' && <Help />}
     </div>
@@ -91,4 +97,18 @@ function moveCursor(ordered: string[], sel: SelMethods, dir: 1 | -1) {
   const i = cur ? ordered.indexOf(cur) : -1;
   const next = ordered[Math.max(0, Math.min(ordered.length - 1, i + dir))];
   if (next) sel.selectOnly(next);
+}
+
+/** Return the shared category if all selected torrents have the same one,
+ *  or `undefined` if they differ. */
+function sharedCategory(
+  hashes: string[],
+  torrents: Record<string, Partial<Torrent>>,
+): string | undefined {
+  if (hashes.length === 0) return '';
+  const first = torrents[hashes[0]]?.category ?? '';
+  for (let i = 1; i < hashes.length; i++) {
+    if ((torrents[hashes[i]]?.category ?? '') !== first) return undefined;
+  }
+  return first;
 }
