@@ -23,9 +23,13 @@ export function GeneralTab({ t }: { t: Partial<Torrent> }) {
     <table className="w-full">
       <tbody>
         {rows.map(([k, v, mono]) => (
-          <tr key={k} className="border-b border-border">
-            <td className="text-muted text-[11px] font-medium uppercase tracking-wide py-0.5 pr-3 w-32">{k}</td>
-            <td className={`text-fg2 break-all ${mono ? 'font-mono' : ''}`}>{v}</td>
+          <tr key={k} className="border-b border-border-muted">
+            <td className="text-fg-muted text-xs uppercase tracking-wider font-semibold py-1.5 pr-4 w-32 align-top">
+              {k}
+            </td>
+            <td className={`text-fg-default text-sm py-1.5 break-all ${mono ? 'font-mono' : ''}`}>
+              {v}
+            </td>
           </tr>
         ))}
       </tbody>

@@ -62,7 +62,7 @@ export default function TorrentListPage() {
   if (authError) return <Navigate to="/login" replace />;
 
   return (
-    <div className="h-screen flex flex-col">
+    <div className="h-screen flex flex-col bg-canvas">
       <TopBar serverState={state.serverState} />
       <div className="flex-1 min-h-0 flex">
         <Sidebar torrents={state.torrents} categories={state.categories} tags={state.tags} />
@@ -74,7 +74,7 @@ export default function TorrentListPage() {
             <DetailsPanel torrent={state.torrents[ui.activeHash]!} />}
         </div>
       </div>
-      {error && <div className="border-t border-danger text-danger px-3 py-1 text-xs">{error}</div>}
+      {error && <div className="border-t border-danger-fg text-danger-fg px-4 py-2 text-sm">{error}</div>}
       {ui.activeModal === 'add' && <AddTorrent categories={Object.keys(state.categories)} />}
       {ui.activeModal === 'delete' && <ConfirmDelete />}
       {ui.activeModal === 'category' && <SetCategory categories={Object.keys(state.categories)} />}

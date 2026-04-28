@@ -10,15 +10,20 @@ export function Help() {
     }, {});
 
   return (
-    <Modal title="keybindings" onClose={close}>
-      <div className="grid grid-cols-2 gap-6 w-[36rem] text-xs">
+    <Modal title="Keyboard shortcuts" onClose={close}>
+      <div className="grid grid-cols-2 gap-6 w-[36rem]">
         {Object.entries(grouped).map(([ctx, items]) => (
           <div key={ctx}>
-            <div className="text-fg2 font-medium text-sm mb-2">{ctx}</div>
+            <div className="text-fg-default font-semibold text-base mb-2">{ctx}</div>
             {items.map((it) => (
-              <div key={it.keys + it.label} className="flex justify-between border-b border-border py-0.5">
-                <kbd className="bg-bg2 border border-border2 px-1.5 py-0.5 rounded text-accent text-[11px] font-mono">{it.keys}</kbd>
-                <span className="text-fg2">{it.label}</span>
+              <div
+                key={it.keys + it.label}
+                className="flex items-center justify-between border-b border-border-muted py-2"
+              >
+                <kbd className="bg-canvas-subtle border border-border-default rounded px-1.5 py-0.5 text-xs font-mono text-fg-muted">
+                  {it.keys}
+                </kbd>
+                <span className="text-fg-muted text-sm">{it.label}</span>
               </div>
             ))}
           </div>

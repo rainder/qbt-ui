@@ -14,7 +14,7 @@ export function TorrentTable({ rows }: { rows: Partial<Torrent>[] }) {
   const v = useVirtualizer({
     count: rows.length,
     getScrollElement: () => parentRef.current,
-    estimateSize: () => 28,
+    estimateSize: () => 44,
     overscan: 16,
   });
 

@@ -8,12 +8,12 @@ import Downloads from './tabs/Downloads';
 import Behavior from './tabs/Behavior';
 
 const TABS = [
-  { to: 'general', label: 'general' },
-  { to: 'connection', label: 'connection' },
-  { to: 'speed', label: 'speed' },
-  { to: 'downloads', label: 'downloads' },
-  { to: 'behavior', label: 'behavior' },
-  { to: 'plugins', label: 'search plugins' },
+  { to: 'general', label: 'General' },
+  { to: 'connection', label: 'Connection' },
+  { to: 'speed', label: 'Speed' },
+  { to: 'downloads', label: 'Downloads' },
+  { to: 'behavior', label: 'Behavior' },
+  { to: 'plugins', label: 'Search plugins' },
 ];
 
 export function SettingsLayout({ pluginsTab }: { pluginsTab: React.ReactNode }) {
@@ -22,17 +22,30 @@ export function SettingsLayout({ pluginsTab }: { pluginsTab: React.ReactNode }) 
     <div className="h-screen flex flex-col">
       <TopBar serverState={state.serverState} />
       <div className="flex-1 min-h-0 flex">
-        <nav className="w-48 bg-bg2 border-r border-border py-3 px-2 text-xs flex flex-col gap-0.5">
+        {/* Settings sidebar */}
+        <nav className="w-60 bg-canvas border-r border-border-muted py-4 px-3 flex flex-col gap-px shrink-0">
+          <div className="text-fg-muted text-xs font-semibold uppercase tracking-wider px-3 mb-1">
+            Settings
+          </div>
           {TABS.map((t) => (
-            <NavLink key={t.to} to={t.to}
+            <NavLink
+              key={t.to}
+              to={t.to}
               className={({ isActive }) =>
-                `block rounded px-2.5 py-1.5 text-[12px] transition-colors ${isActive
-                  ? 'bg-accent-bg text-fg2 font-medium ring-1 ring-inset ring-accent/40'
-                  : 'text-fg hover:bg-bg3 hover:text-fg2'}`}
-            >{t.label}</NavLink>
+                [
+                  'flex items-center rounded-md px-3 py-1.5 text-sm transition-colors',
+                  isActive
+                    ? 'bg-canvas-subtle text-fg-default font-semibold sidebar-active'
+                    : 'text-fg-default hover:bg-canvas-subtle',
+                ].join(' ')
+              }
+            >
+              {t.label}
+            </NavLink>
           ))}
         </nav>
-        <div className="flex-1 overflow-auto p-4">
+        {/* Content */}
+        <div className="flex-1 overflow-auto p-6 max-w-3xl">
           <Routes>
             <Route index element={<Navigate to="general" replace />} />
             <Route path="general" element={<General />} />

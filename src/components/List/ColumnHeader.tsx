@@ -14,15 +14,21 @@ const COLS: { key: SortKey; label: string; width: string; align?: string }[] = [
 export function ColumnHeader() {
   const { sortKey, sortDir, setSort } = useUi();
   return (
-    <div className="flex items-center gap-3 px-3 h-9 border-b border-border bg-bg2 text-muted text-[11px] font-medium pl-[10px] border-l-2 border-l-transparent">
-      <div className="w-8" />
+    <div className="bg-canvas-subtle border-b border-border-default flex items-center gap-3 px-4 h-9 text-xs font-semibold uppercase tracking-wider text-fg-muted">
+      {/* Status pill placeholder — matches TorrentRow layout */}
+      <div className="w-14 shrink-0" />
       {COLS.map((c) => (
         <button
-          key={c.key} onClick={() => setSort(c.key)}
-          className={clsx(c.width, c.align, 'truncate text-left hover:text-fg2',
-            sortKey === c.key ? 'text-accent' : 'text-muted')}
+          key={c.key}
+          onClick={() => setSort(c.key)}
+          className={clsx(
+            c.width, c.align,
+            'truncate text-left transition-colors',
+            sortKey === c.key ? 'text-fg-default' : 'hover:text-fg-default',
+          )}
         >
-          {c.label}{sortKey === c.key && (sortDir === 'asc' ? ' ↑' : ' ↓')}
+          {c.label}
+          {sortKey === c.key && (sortDir === 'asc' ? ' ↑' : ' ↓')}
         </button>
       ))}
     </div>

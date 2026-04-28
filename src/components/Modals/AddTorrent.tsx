@@ -2,6 +2,9 @@ import { useState } from 'react';
 import { Modal, useCloseModal } from './Modal';
 import { addTorrent } from '@/api/torrents';
 
+const inputCls =
+  'block w-full bg-canvas-inset border border-border-default rounded-md px-3 py-[5px] text-sm text-fg-default focus-accent';
+
 export function AddTorrent({ initialUrl = '', categories }: {
   initialUrl?: string;
   categories: string[];
@@ -33,45 +36,78 @@ export function AddTorrent({ initialUrl = '', categories }: {
   }
 
   return (
-    <Modal title="add torrent" onClose={close}>
-      <form onSubmit={submit} className="space-y-3 text-xs w-[28rem]">
-        <label className="block text-muted text-[10px] font-medium uppercase">URLs / Magnets (one per line)
+    <Modal title="Add torrent" onClose={close}>
+      <form onSubmit={submit} className="space-y-4 w-[28rem]">
+        <div>
+          <label className="block text-sm font-medium text-fg-default mb-1">
+            URLs / Magnets <span className="text-fg-muted font-normal">(one per line)</span>
+          </label>
           <textarea
-            className="mt-1 block w-full h-24 bg-bg3 border border-border2 rounded px-3 py-1.5 text-fg2 focus:outline-none focus:border-accent"
-            value={urls} onChange={(e) => setUrls(e.target.value)}
+            className={`${inputCls} h-24`}
+            value={urls}
+            onChange={(e) => setUrls(e.target.value)}
             placeholder="magnet:?xt=urn:btih:..."
           />
-        </label>
-        <label className="block text-muted text-[10px] font-medium uppercase">Files
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-fg-default mb-1">Files</label>
           <input
-            type="file" multiple accept=".torrent"
+            type="file"
+            multiple
+            accept=".torrent"
             onChange={(e) => setFiles(Array.from(e.target.files ?? []))}
-            className="mt-1 block w-full text-fg2"
+            className="block w-full text-sm text-fg-default"
           />
-        </label>
+        </div>
+
         <div className="grid grid-cols-2 gap-3">
-          <label className="block text-muted text-[10px] font-medium uppercase">Category
-            <select value={category} onChange={(e) => setCategory(e.target.value)}
-                    className="mt-1 block w-full bg-bg3 border border-border2 rounded px-3 py-1.5 text-fg2 focus:outline-none focus:border-accent">
+          <div>
+            <label className="block text-sm font-medium text-fg-default mb-1">Category</label>
+            <select
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              className={inputCls}
+            >
               <option value="">(none)</option>
               {categories.map((c) => <option key={c} value={c}>{c}</option>)}
             </select>
-          </label>
-          <label className="block text-muted text-[10px] font-medium uppercase">Tags (comma)
-            <input className="mt-1 block w-full bg-bg3 border border-border2 rounded px-3 py-1.5 text-fg2 focus:outline-none focus:border-accent"
-                   value={tags} onChange={(e) => setTags(e.target.value)} />
-          </label>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-fg-default mb-1">Tags (comma)</label>
+            <input
+              className={inputCls}
+              value={tags}
+              onChange={(e) => setTags(e.target.value)}
+            />
+          </div>
         </div>
-        <label className="flex items-center gap-2 text-muted">
-          <input type="checkbox" checked={paused} onChange={(e) => setPaused(e.target.checked)} />
-          start paused
+
+        <label className="flex items-center gap-2 text-fg-default text-sm">
+          <input
+            type="checkbox"
+            checked={paused}
+            onChange={(e) => setPaused(e.target.checked)}
+          />
+          Start paused
         </label>
-        {err && <div className="text-danger">{err}</div>}
+
+        {err && <div className="text-danger-fg text-sm">{err}</div>}
+
         <div className="flex justify-end gap-2 pt-2">
-          <button type="button" onClick={close} className="border border-border2 text-fg hover:bg-bg2 px-3 py-1.5 rounded">cancel</button>
-          <button type="submit" disabled={busy}
-                  className="bg-[#238636] hover:bg-[#2ea043] text-white px-3 py-1.5 rounded font-medium disabled:opacity-50">
-            {busy ? '...' : 'add'}
+          <button
+            type="button"
+            onClick={close}
+            className="bg-canvas-subtle hover:bg-border-default text-fg-default border border-border-default rounded-md px-3 py-[5px] text-sm font-medium"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            disabled={busy}
+            className="bg-success-emphasis hover:bg-success-emphasis-h text-fg-on-emphasis border border-subtle rounded-md px-3 py-[5px] text-sm font-medium disabled:opacity-50"
+          >
+            {busy ? '…' : 'Add'}
           </button>
         </div>
       </form>

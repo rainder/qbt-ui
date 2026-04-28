@@ -3,6 +3,9 @@ import { Modal, useCloseModal } from './Modal';
 import { addTags, removeTags } from '@/api/torrents';
 import { useSelection } from '@/stores/selection';
 
+const inputCls =
+  'block w-full bg-canvas-inset border border-border-default rounded-md px-3 py-[5px] text-sm text-fg-default focus-accent';
+
 export function EditTags({ allTags }: { allTags: string[] }) {
   const close = useCloseModal();
   const hashes = useSelection((s) => s.hashes());
@@ -22,23 +25,46 @@ export function EditTags({ allTags }: { allTags: string[] }) {
   }
 
   return (
-    <Modal title="edit tags" onClose={close}>
-      <div className="space-y-3 text-xs w-80">
-        <label className="block text-muted text-[10px] font-medium uppercase">Add (comma)
-          <input value={add} onChange={(e) => setAdd(e.target.value)} list="tags-add"
-                 className="mt-1 block w-full bg-bg3 border border-border2 rounded px-3 py-1.5 text-fg2 focus:outline-none focus:border-accent" />
+    <Modal title="Edit tags" onClose={close}>
+      <div className="space-y-4 w-80">
+        <div>
+          <label className="block text-sm font-medium text-fg-default mb-1">
+            Add <span className="text-fg-muted font-normal">(comma separated)</span>
+          </label>
+          <input
+            value={add}
+            onChange={(e) => setAdd(e.target.value)}
+            list="tags-add"
+            className={inputCls}
+          />
           <datalist id="tags-add">
             {allTags.map((t) => <option key={t} value={t} />)}
           </datalist>
-        </label>
-        <label className="block text-muted text-[10px] font-medium uppercase">Remove (comma)
-          <input value={rm} onChange={(e) => setRm(e.target.value)}
-                 className="mt-1 block w-full bg-bg3 border border-border2 rounded px-3 py-1.5 text-fg2 focus:outline-none focus:border-accent" />
-        </label>
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-fg-default mb-1">
+            Remove <span className="text-fg-muted font-normal">(comma separated)</span>
+          </label>
+          <input
+            value={rm}
+            onChange={(e) => setRm(e.target.value)}
+            className={inputCls}
+          />
+        </div>
         <div className="flex justify-end gap-2 pt-2">
-          <button onClick={close} className="border border-border2 text-fg hover:bg-bg2 px-3 py-1.5 rounded">cancel</button>
-          <button onClick={submit} disabled={busy}
-                  className="bg-[#238636] hover:bg-[#2ea043] text-white px-3 py-1.5 rounded font-medium disabled:opacity-50">apply</button>
+          <button
+            onClick={close}
+            className="bg-canvas-subtle hover:bg-border-default text-fg-default border border-border-default rounded-md px-3 py-[5px] text-sm font-medium"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={submit}
+            disabled={busy}
+            className="bg-success-emphasis hover:bg-success-emphasis-h text-fg-on-emphasis border border-subtle rounded-md px-3 py-[5px] text-sm font-medium disabled:opacity-50"
+          >
+            Apply
+          </button>
         </div>
       </div>
     </Modal>

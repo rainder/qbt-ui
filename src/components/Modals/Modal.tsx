@@ -13,15 +13,25 @@ export function Modal({ title, children, onClose }: {
   }, [onClose]);
 
   return (
-    <div className="fixed inset-0 z-50 grid place-items-center bg-black/70" onClick={onClose}>
-      <div className="bg-bg3 border border-border2 min-w-96 max-w-2xl rounded-md shadow-xl"
-           onClick={(e) => e.stopPropagation()}>
-        <div className="px-4 h-10 border-b border-border2 flex items-center justify-between text-fg2">
-          <span className="font-medium">{title}</span>
-          <button onClick={onClose} className="text-muted hover:text-fg2">
-            <kbd className="text-[10px] text-muted bg-bg2 px-1.5 py-0.5 rounded border border-border">esc</kbd>
+    <div
+      className="fixed inset-0 z-50 grid place-items-center"
+      style={{ backgroundColor: 'rgba(1,4,9,0.8)' }}
+      onClick={onClose}
+    >
+      <div
+        className="bg-canvas border border-border-default rounded-md shadow-2xl min-w-96 max-w-2xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div className="h-12 px-4 border-b border-border-default flex items-center justify-between">
+          <span className="text-base font-semibold text-fg-default">{title}</span>
+          <button onClick={onClose} className="hover:text-fg-default text-fg-muted">
+            <kbd className="bg-canvas-subtle border border-border-default rounded px-1.5 py-0.5 text-xs font-mono text-fg-muted">
+              esc
+            </kbd>
           </button>
         </div>
+        {/* Body */}
         <div className="p-4">{children}</div>
       </div>
     </div>

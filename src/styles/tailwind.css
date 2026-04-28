@@ -1,49 +1,86 @@
 @import "tailwindcss";
 
 @theme {
-  /* Colors — Design C: Modern Dashboard (GitHub-flavored dark) */
-  --color-bg:      #0d1117;
-  --color-bg2:     #010409;
-  --color-bg3:     #161b22;
-  --color-fg:      #c9d1d9;
-  --color-fg2:     #f0f6fc;
-  --color-muted:   #8b949e;
-  --color-border:  #21262d;
-  --color-border2: #30363d;
-  --color-accent:  #58a6ff;
-  --color-ok:      #3fb950;
-  --color-warn:    #d29922;
-  --color-danger:  #f85149;
-  --color-success: #238636;
-  --color-success-h: #2ea043;
+  /* Canvas */
+  --color-canvas: #0d1117;
+  --color-canvas-subtle: #161b22;
+  --color-canvas-inset: #010409;
 
-  /* Font families */
-  --font-mono: ui-monospace, SFMono-Regular, monospace;
+  /* Borders */
+  --color-border-default: #30363d;
+  --color-border-muted: #21262d;
 
-  /* Font sizes */
-  --text-xs:   11px;
-  --text-sm:   12px;
-  --text-base: 13px;
-  --text-md:   14px;
-  --text-lg:   16px;
+  /* Foreground */
+  --color-fg-default: #e6edf3;
+  --color-fg-muted: #7d8590;
+  --color-fg-subtle: #6e7681;
+  --color-fg-on-emphasis: #ffffff;
+
+  /* Accent (blue) */
+  --color-accent-fg: #2f81f7;
+  --color-accent-emphasis: #1f6feb;
+
+  /* Success (green) */
+  --color-success-fg: #3fb950;
+  --color-success-emphasis: #238636;
+  --color-success-emphasis-h: #2ea043;
+
+  /* Attention (yellow) */
+  --color-attention-fg: #d29922;
+  --color-attention-emphasis: #9e6a03;
+
+  /* Danger (red) */
+  --color-danger-fg: #f85149;
+  --color-danger-emphasis: #da3633;
+  --color-danger-emphasis-h: #b62324;
+
+  /* Done (purple) */
+  --color-done-fg: #a371f7;
+
+  /* Font stacks */
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+
+  /* Type scale */
+  --text-xs: 12px;
+  --text-sm: 13px;
+  --text-base: 14px;
+  --text-md: 16px;
+  --text-lg: 20px;
+
+  /* Radii */
+  --radius-sm: 4px;
+  --radius-md: 6px;
 }
 
 @layer utilities {
-  /* Translucent background tints */
-  .bg-accent-bg   { background-color: rgba(88, 166, 255, 0.15); }
-  .bg-ok-bg       { background-color: rgba(63, 185, 80, 0.15); }
-  .bg-warn-bg     { background-color: rgba(210, 153, 34, 0.15); }
-  .bg-danger-bg   { background-color: rgba(248, 81, 73, 0.15); }
-  .bg-muted-soft  { background-color: rgba(139, 148, 158, 0.15); }
+  /* Subtle tinted backgrounds (rgba — cannot be @theme tokens) */
+  .bg-accent-subtle     { background-color: rgba(56, 139, 253, 0.15); }
+  .bg-success-subtle    { background-color: rgba(46, 160, 67, 0.15); }
+  .bg-attention-subtle  { background-color: rgba(187, 128, 9, 0.15); }
+  .bg-danger-subtle     { background-color: rgba(248, 81, 73, 0.15); }
+  .bg-done-subtle       { background-color: rgba(163, 113, 247, 0.15); }
 
-  /* Translucent border tints */
-  .border-accent-soft { border-color: rgba(88, 166, 255, 0.30); }
-  .border-ok-soft     { border-color: rgba(63, 185, 80, 0.30); }
-  .border-warn-soft   { border-color: rgba(210, 153, 34, 0.30); }
-  .border-danger-soft { border-color: rgba(248, 81, 73, 0.30); }
-  .border-muted-soft  { border-color: rgba(139, 148, 158, 0.30); }
+  /* Muted borders (rgba) */
+  .border-accent-muted     { border-color: rgba(56, 139, 253, 0.4); }
+  .border-success-muted    { border-color: rgba(46, 160, 67, 0.4); }
+  .border-attention-muted  { border-color: rgba(187, 128, 9, 0.4); }
+  .border-danger-muted     { border-color: rgba(248, 81, 73, 0.4); }
+  .border-neutral-muted    { border-color: rgba(110, 118, 129, 0.4); }
+  .border-subtle           { border-color: rgba(240, 246, 252, 0.1); }
 
-  /* Progress bar fills */
-  .bar-fill      { background: linear-gradient(90deg, #58a6ff 0%, #58a6ff 100%); }
-  .bar-fill-done { background: linear-gradient(90deg, #58a6ff 0%, #3fb950 100%); }
+  /* Neutral muted bg for idle states */
+  .bg-neutral-subtle    { background-color: rgba(110, 118, 129, 0.15); }
+
+  /* Focus ring helper */
+  .focus-accent:focus {
+    outline: none;
+    border-color: var(--color-accent-fg);
+    box-shadow: 0 0 0 3px rgba(56, 139, 253, 0.3);
+  }
+
+  /* Sidebar active left accent strip */
+  .sidebar-active {
+    box-shadow: inset 2px 0 0 var(--color-accent-fg);
+  }
 }

@@ -13,7 +13,7 @@ export function AuthGate() {
       .catch(() => setStatus('unauthed'));
   }, []);
 
-  if (status === 'checking') return <div className="p-4 text-muted">checking session...</div>;
+  if (status === 'checking') return <div className="p-4 text-fg-muted">checking session...</div>;
   if (status === 'unauthed') return <Navigate to="/login" replace />;
   return <Outlet />;
 }

@@ -2,6 +2,9 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { login } from '@/api/auth';
 
+const inputCls =
+  'block w-full bg-canvas-inset border border-border-default rounded-md px-3 py-[5px] text-sm text-fg-default focus-accent';
+
 export default function LoginPage() {
   const [username, setUsername] = useState('admin');
   const [password, setPassword] = useState('');
@@ -24,33 +27,56 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="grid place-items-center min-h-screen bg-bg">
-      <form onSubmit={onSubmit} className="w-80 border border-border2 p-6 space-y-4 bg-bg3 rounded-md shadow-2xl">
-        <div className="flex items-center gap-2 text-fg2 font-semibold text-md">
-          <span className="w-2 h-2 rounded-full bg-accent"></span>
-          qbt <span className="text-muted font-normal">/ login</span>
+    <div className="grid place-items-center min-h-screen bg-canvas">
+      <div className="flex flex-col items-center gap-4">
+        {/* Brand above card */}
+        <div className="flex items-center gap-2 text-fg-default font-light text-2xl">
+          <span className="w-4 h-4 rounded-full bg-accent-fg" />
+          qbt
         </div>
-        <label className="block text-[10px] font-medium uppercase text-muted">Username
-          <input
-            className="block w-full mt-1 bg-bg3 border border-border2 rounded px-3 py-1.5 text-fg2 focus:outline-none focus:border-accent"
-            value={username} onChange={(e) => setUsername(e.target.value)}
-            autoFocus required
-          />
-        </label>
-        <label className="block text-[10px] font-medium uppercase text-muted">Password
-          <input
-            type="password"
-            className="block w-full mt-1 bg-bg3 border border-border2 rounded px-3 py-1.5 text-fg2 focus:outline-none focus:border-accent"
-            value={password} onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </label>
-        {error && <div className="text-danger text-xs">{error}</div>}
-        <button
-          type="submit" disabled={busy}
-          className="w-full bg-[#238636] hover:bg-[#2ea043] text-white px-3 py-1.5 rounded font-medium disabled:opacity-50"
-        >{busy ? '...' : 'Connect'}</button>
-      </form>
+
+        {/* Login card */}
+        <form
+          onSubmit={onSubmit}
+          className="w-80 bg-canvas-subtle border border-border-default rounded-md p-6 space-y-4 shadow-2xl"
+        >
+          <h1 className="text-base font-semibold text-fg-default text-center">
+            Sign in to qBittorrent
+          </h1>
+
+          <div>
+            <label className="block text-sm font-medium text-fg-default mb-1">Username</label>
+            <input
+              className={inputCls}
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              autoFocus
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-fg-default mb-1">Password</label>
+            <input
+              type="password"
+              className={inputCls}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+
+          {error && <div className="text-danger-fg text-sm">{error}</div>}
+
+          <button
+            type="submit"
+            disabled={busy}
+            className="w-full bg-success-emphasis hover:bg-success-emphasis-h text-fg-on-emphasis border border-subtle rounded-md px-3 py-[5px] text-sm font-medium disabled:opacity-50"
+          >
+            {busy ? '…' : 'Connect'}
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

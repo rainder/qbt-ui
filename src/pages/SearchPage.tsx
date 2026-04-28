@@ -50,9 +50,9 @@ export default function SearchPage() {
     <div className="h-screen flex flex-col">
       <TopBar serverState={state.serverState} />
       <SearchBar onStart={start} />
-      {error && <div className="text-danger px-3 py-1 text-xs">{error}</div>}
-      <div className="px-3 py-1 text-muted text-[11px]">
-        {running ? `searching… ${results.length} results so far` : results.length ? `${results.length} results` : 'enter a query above'}
+      {error && <div className="text-danger-fg px-4 py-2 text-sm">{error}</div>}
+      <div className="px-4 py-2 text-fg-muted text-xs">
+        {running ? `Searching… ${results.length} results so far` : results.length ? `${results.length} results` : 'Enter a query above'}
       </div>
       <div className="flex-1 overflow-auto">
         <ResultsTable results={results} onAdd={add} />

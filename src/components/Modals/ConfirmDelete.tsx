@@ -20,18 +20,32 @@ export function ConfirmDelete() {
   }
 
   return (
-    <Modal title={`delete ${hashes.length} torrent(s)`} onClose={close}>
-      <div className="space-y-3 text-xs w-80">
-        <p>this action cannot be undone.</p>
-        <label className="flex items-center gap-2 text-danger">
-          <input type="checkbox" checked={files} onChange={(e) => setFiles(e.target.checked)} />
-          also delete files on disk
+    <Modal title={`Delete ${hashes.length} torrent(s)`} onClose={close}>
+      <div className="space-y-4 w-80">
+        <p className="text-fg-default text-sm">
+          This action <span className="font-semibold">cannot be undone</span>.
+        </p>
+        <label className="flex items-center gap-2 text-fg-default text-sm">
+          <input
+            type="checkbox"
+            checked={files}
+            onChange={(e) => setFiles(e.target.checked)}
+          />
+          Also delete files on disk
         </label>
         <div className="flex justify-end gap-2 pt-2">
-          <button onClick={close} className="border border-border2 text-fg hover:bg-bg2 px-3 py-1.5 rounded">cancel</button>
-          <button onClick={submit} disabled={busy}
-                  className="bg-danger hover:opacity-90 text-white px-3 py-1.5 rounded font-medium disabled:opacity-50">
-            {busy ? '...' : 'delete'}
+          <button
+            onClick={close}
+            className="bg-canvas-subtle hover:bg-border-default text-fg-default border border-border-default rounded-md px-3 py-[5px] text-sm font-medium"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={submit}
+            disabled={busy}
+            className="bg-canvas-subtle hover:bg-danger-emphasis hover:text-fg-on-emphasis text-danger-fg border border-border-default hover:border-danger-emphasis rounded-md px-3 py-[5px] text-sm font-medium disabled:opacity-50"
+          >
+            {busy ? '…' : 'Delete'}
           </button>
         </div>
       </div>
