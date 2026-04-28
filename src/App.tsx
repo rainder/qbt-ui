@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthGate } from './components/AuthGate';
 import { useUi } from './stores/ui';
 import { useKeyboardHandler, useKeybinds } from './hooks/useKeybinds';
+import { useCompletionNotifications } from './hooks/useCompletionNotifications';
 import { toggleSpeedLimitsMode } from './api/transfer';
 import LoginPage from './pages/LoginPage';
 import TorrentListPage from './pages/TorrentListPage';
@@ -10,6 +11,11 @@ import SearchPage from './pages/SearchPage';
 import SettingsPage from './pages/SettingsPage';
 
 const qc = new QueryClient({ defaultOptions: { queries: { staleTime: 5_000, retry: false } } });
+
+function CompletionWatcher() {
+  useCompletionNotifications();
+  return null;
+}
 
 function GlobalKeybinds() {
   const { activeModal, openModal } = useUi();
@@ -33,6 +39,7 @@ export function App() {
     <QueryClientProvider client={qc}>
       <BrowserRouter>
         <GlobalKeybinds />
+        <CompletionWatcher />
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route element={<AuthGate />}>
