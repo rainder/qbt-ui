@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthGate } from './components/AuthGate';
 import { useUi } from './stores/ui';
 import { useKeyboardHandler, useKeybinds } from './hooks/useKeybinds';
+import { toggleSpeedLimitsMode } from './api/transfer';
 import LoginPage from './pages/LoginPage';
 import TorrentListPage from './pages/TorrentListPage';
 import SearchPage from './pages/SearchPage';
@@ -21,6 +22,7 @@ function GlobalKeybinds() {
     { context: 'global', keys: 'gh', label: 'go home',     action: () => navigate('/') },
     { context: 'global', keys: 'gp', label: 'go plugins',  action: () => navigate('/settings/plugins') },
     { context: 'global', keys: 'gn', label: 'go settings', action: () => navigate('/settings') },
+    { context: 'global', keys: 'ga', label: 'alt rate',    action: () => toggleSpeedLimitsMode() },
     { context: 'modal',  keys: 'esc', label: 'close',      action: () => openModal(null) },
   ]);
   return null;
