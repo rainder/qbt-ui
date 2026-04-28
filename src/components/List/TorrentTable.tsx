@@ -103,6 +103,11 @@ export function TorrentTable({ rows }: { rows: Partial<Torrent>[] }) {
         onClick: () => { void bottomPrio(sel); },
       },
       {
+        label: 'Rate limits…',
+        onClick: () => openModal('limits'),
+        separatorBefore: true,
+      },
+      {
         label: 'Set category…',
         shortcut: 'c',
         onClick: () => openModal('category'),

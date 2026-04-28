@@ -103,6 +103,18 @@ export const removeTrackers = (hash: string, urls: string[]) =>
 export const editTracker = (hash: string, origUrl: string, newUrl: string) =>
   apiPost('/torrents/editTracker', { hash, origUrl, newUrl });
 
+export const setDownloadLimit = (hashes: string[], limitBps: number) =>
+  apiPost('/torrents/setDownloadLimit', { hashes: hashes.join('|'), limit: limitBps });
+
+export const setUploadLimit = (hashes: string[], limitBps: number) =>
+  apiPost('/torrents/setUploadLimit', { hashes: hashes.join('|'), limit: limitBps });
+
+export const getDownloadLimits = (hashes: string[]): Promise<Record<string, number>> =>
+  apiPost<Record<string, number>>('/torrents/downloadLimit', { hashes: hashes.join('|') });
+
+export const getUploadLimits = (hashes: string[]): Promise<Record<string, number>> =>
+  apiPost<Record<string, number>>('/torrents/uploadLimit', { hashes: hashes.join('|') });
+
 export interface AddTorrentInput {
   files?: File[];
   urls?: string;          // newline-separated magnet/HTTP URLs

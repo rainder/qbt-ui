@@ -10,6 +10,7 @@ import { SetCategory } from '@/components/Modals/SetCategory';
 import { EditTags } from '@/components/Modals/EditTags';
 import { Help } from '@/components/Modals/Help';
 import { MoveLocation } from '@/components/Modals/MoveLocation';
+import { SetRateLimits } from '@/components/Modals/SetRateLimits';
 import { DetailsPanel } from '@/components/Layout/DetailsPanel';
 import { useUi } from '@/stores/ui';
 import { useSelection } from '@/stores/selection';
@@ -188,6 +189,7 @@ export default function TorrentListPage() {
           savePath={sharedSavePath(sel.hashes(), state.torrents)}
         />
       )}
+      {ui.activeModal === 'limits' && <SetRateLimits hashes={sel.hashes()} />}
     </div>
   );
 }
