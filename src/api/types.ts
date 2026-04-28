@@ -30,6 +30,7 @@ export interface Torrent {
   downloaded: number;
   seq_dl: boolean;          // sequential download enabled
   f_l_piece_prio: boolean;  // download first and last pieces first
+  force_start: boolean;     // force-started (ignores queue)
 }
 
 export interface SyncMainData {

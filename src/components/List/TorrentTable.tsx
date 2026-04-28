@@ -9,6 +9,7 @@ import { useUi } from '@/stores/ui';
 import {
   pause, resume, recheck, reannounce,
   toggleSequentialDownload, toggleFirstLastPiecePrio,
+  setForceStart, topPrio, bottomPrio, increasePrio, decreasePrio,
 } from '@/api/torrents';
 
 export function TorrentTable({ rows }: { rows: Partial<Torrent>[] }) {
@@ -42,6 +43,7 @@ export function TorrentTable({ rows }: { rows: Partial<Torrent>[] }) {
     const torrentsByHash = new Map(rows.map((r) => [r.hash, r]));
     const allSeq = sel.length > 0 && sel.every((h) => torrentsByHash.get(h)?.seq_dl);
     const allFL = sel.length > 0 && sel.every((h) => torrentsByHash.get(h)?.f_l_piece_prio);
+    const allForceStart = sel.length > 0 && sel.every((h) => torrentsByHash.get(h)?.force_start);
 
     return [
       {
@@ -80,6 +82,27 @@ export function TorrentTable({ rows }: { rows: Partial<Torrent>[] }) {
         onClick: () => { void toggleFirstLastPiecePrio(sel); },
       },
       {
+        label: allForceStart ? '✓ Force start' : 'Force start',
+        onClick: () => { void setForceStart(sel, !allForceStart); },
+      },
+      {
+        label: 'Move to top',
+        onClick: () => { void topPrio(sel); },
+        separatorBefore: true,
+      },
+      {
+        label: 'Move up',
+        onClick: () => { void increasePrio(sel); },
+      },
+      {
+        label: 'Move down',
+        onClick: () => { void decreasePrio(sel); },
+      },
+      {
+        label: 'Move to bottom',
+        onClick: () => { void bottomPrio(sel); },
+      },
+      {
         label: 'Set category…',
         shortcut: 'c',
         onClick: () => openModal('category'),
@@ -89,6 +112,30 @@ export function TorrentTable({ rows }: { rows: Partial<Torrent>[] }) {
         label: 'Edit tags…',
         shortcut: 't',
         onClick: () => openModal('tags'),
+      },
+      {
+        label: 'Move…',
+        onClick: () => openModal('location'),
+      },
+      {
+        label: 'Export .torrent',
+        disabled: count !== 1,
+        onClick: () => {
+          const hash = sel[0];
+          if (!hash) return;
+          const torrent = torrentsByHash.get(hash);
+          const name = torrent?.name;
+          void (async () => {
+            const res = await fetch(`/api/v2/torrents/export?hash=${hash}`, { credentials: 'include' });
+            const blob = await res.blob();
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${name || hash}.torrent`;
+            a.click();
+            URL.revokeObjectURL(url);
+          })();
+        },
       },
       {
         label: 'Delete…',

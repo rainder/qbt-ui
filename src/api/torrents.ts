@@ -53,6 +53,24 @@ export const toggleSequentialDownload = (hashes: string[]) =>
 export const toggleFirstLastPiecePrio = (hashes: string[]) =>
   apiPost('/torrents/toggleFirstLastPiecePrio', { hashes: hashes.join('|') });
 
+export const setForceStart = (hashes: string[], value: boolean) =>
+  apiPost('/torrents/setForceStart', { hashes: hashes.join('|'), value });
+
+export const topPrio = (hashes: string[]) =>
+  apiPost('/torrents/topPrio', { hashes: hashes.join('|') });
+
+export const bottomPrio = (hashes: string[]) =>
+  apiPost('/torrents/bottomPrio', { hashes: hashes.join('|') });
+
+export const increasePrio = (hashes: string[]) =>
+  apiPost('/torrents/increasePrio', { hashes: hashes.join('|') });
+
+export const decreasePrio = (hashes: string[]) =>
+  apiPost('/torrents/decreasePrio', { hashes: hashes.join('|') });
+
+export const setLocation = (hashes: string[], location: string) =>
+  apiPost('/torrents/setLocation', { hashes: hashes.join('|'), location });
+
 /** qBittorrent file priority levels */
 export const FilePriority = {
   Skip: 0,

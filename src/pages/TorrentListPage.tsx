@@ -9,6 +9,7 @@ import { ConfirmDelete } from '@/components/Modals/ConfirmDelete';
 import { SetCategory } from '@/components/Modals/SetCategory';
 import { EditTags } from '@/components/Modals/EditTags';
 import { Help } from '@/components/Modals/Help';
+import { MoveLocation } from '@/components/Modals/MoveLocation';
 import { DetailsPanel } from '@/components/Layout/DetailsPanel';
 import { useUi } from '@/stores/ui';
 import { useSelection } from '@/stores/selection';
@@ -182,6 +183,11 @@ export default function TorrentListPage() {
       )}
       {ui.activeModal === 'tags' && <EditTags allTags={state.tags} />}
       {ui.activeModal === 'help' && <Help />}
+      {ui.activeModal === 'location' && (
+        <MoveLocation
+          savePath={sharedSavePath(sel.hashes(), state.torrents)}
+        />
+      )}
     </div>
   );
 }
@@ -205,6 +211,20 @@ function sharedCategory(
   const first = torrents[hashes[0]]?.category ?? '';
   for (let i = 1; i < hashes.length; i++) {
     if ((torrents[hashes[i]]?.category ?? '') !== first) return undefined;
+  }
+  return first;
+}
+
+/** Return the shared save_path if all selected torrents have the same one,
+ *  or `undefined` if they differ. */
+function sharedSavePath(
+  hashes: string[],
+  torrents: Record<string, Partial<Torrent>>,
+): string | undefined {
+  if (hashes.length === 0) return '';
+  const first = torrents[hashes[0]]?.save_path ?? '';
+  for (let i = 1; i < hashes.length; i++) {
+    if ((torrents[hashes[i]]?.save_path ?? '') !== first) return undefined;
   }
   return first;
 }
