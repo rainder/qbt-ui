@@ -14,7 +14,7 @@ interface UiState {
   sortDir: SortDir;
   detailsOpen: boolean;
   activeHash: string | null;
-  activeModal: 'add' | 'delete' | 'category' | 'tags' | 'help' | 'location' | 'limits' | null;
+  activeModal: 'add' | 'delete' | 'category' | 'tags' | 'help' | 'location' | 'limits' | 'log' | null;
 
   setStatus(s: StatusFilter): void;
   setCategory(c: string | null): void;

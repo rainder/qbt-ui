@@ -101,6 +101,15 @@ export function TopBar({ serverState }: { serverState?: ServerState }) {
         + Add
       </button>
 
+      {/* Log */}
+      <button
+        onClick={() => openModal('log')}
+        className="text-fg-muted hover:text-fg-default text-xs px-2 py-1"
+        title="View log"
+      >
+        Log
+      </button>
+
       {/* Help */}
       <button
         onClick={() => openModal('help')}
