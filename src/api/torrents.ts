@@ -1,10 +1,34 @@
-import { apiGet, apiPost } from './client';
+import { apiGet, apiPost, ApiError } from './client';
 import type { SyncMainData, TorrentFile, TorrentPeer, TorrentTracker } from './types';
 
 export const fetchSync = (rid: number) => apiGet<SyncMainData>('/sync/maindata', { rid });
 
-export const pause = (hashes: string[]) => apiPost('/torrents/pause', { hashes: hashes.join('|') });
-export const resume = (hashes: string[]) => apiPost('/torrents/resume', { hashes: hashes.join('|') });
+async function pauseOrStop(hashes: string[]) {
+  try {
+    await apiPost('/torrents/stop', { hashes: hashes.join('|') });
+  } catch (e) {
+    if (e instanceof ApiError && e.status === 404) {
+      await apiPost('/torrents/pause', { hashes: hashes.join('|') });
+    } else {
+      throw e;
+    }
+  }
+}
+
+async function resumeOrStart(hashes: string[]) {
+  try {
+    await apiPost('/torrents/start', { hashes: hashes.join('|') });
+  } catch (e) {
+    if (e instanceof ApiError && e.status === 404) {
+      await apiPost('/torrents/resume', { hashes: hashes.join('|') });
+    } else {
+      throw e;
+    }
+  }
+}
+
+export const pause = pauseOrStop;
+export const resume = resumeOrStart;
 export const recheck = (hashes: string[]) => apiPost('/torrents/recheck', { hashes: hashes.join('|') });
 export const reannounce = (hashes: string[]) => apiPost('/torrents/reannounce', { hashes: hashes.join('|') });
 
