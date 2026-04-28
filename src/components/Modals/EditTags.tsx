@@ -8,7 +8,8 @@ const inputCls =
 
 export function EditTags({ allTags }: { allTags: string[] }) {
   const close = useCloseModal();
-  const hashes = useSelection((s) => s.hashes());
+  const selected = useSelection((s) => s.selected);
+  const hashes = Array.from(selected);
   const [add, setAdd] = useState('');
   const [rm, setRm] = useState('');
   const [busy, setBusy] = useState(false);

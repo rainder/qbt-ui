@@ -5,8 +5,9 @@ import { useSelection } from '@/stores/selection';
 
 export function ConfirmDelete() {
   const close = useCloseModal();
-  const hashes = useSelection((s) => s.hashes());
+  const selected = useSelection((s) => s.selected);
   const clear = useSelection((s) => s.clear);
+  const hashes = Array.from(selected);
   const [files, setFiles] = useState(false);
   const [busy, setBusy] = useState(false);
 

@@ -8,7 +8,8 @@ const inputCls =
 
 export function SetCategory({ categories }: { categories: string[] }) {
   const close = useCloseModal();
-  const hashes = useSelection((s) => s.hashes());
+  const selected = useSelection((s) => s.selected);
+  const hashes = Array.from(selected);
   const [value, setValue] = useState('');
   const [busy, setBusy] = useState(false);
 
