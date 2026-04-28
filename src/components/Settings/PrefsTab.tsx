@@ -20,6 +20,13 @@ export function PrefsTab({ fields }: { fields: FieldDef[] }) {
   const [err, setErr] = useState<string | null>(null);
 
   useEffect(() => { fetchPrefs().then(setLocal).catch((e) => setErr(e.message)); }, []);
+  if (err && !prefs) {
+    return (
+      <div className="border border-danger-muted bg-danger-subtle rounded-md p-3 text-sm text-danger-fg">
+        Failed to load preferences: {err}
+      </div>
+    );
+  }
   if (!prefs) return <div className="text-fg-muted text-sm">Loading…</div>;
 
   function update(k: string, v: unknown) { setDirty((d) => ({ ...d, [k]: v })); }
