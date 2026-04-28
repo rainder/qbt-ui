@@ -2,10 +2,13 @@ import { useSync } from '@/hooks/useSync';
 import { TorrentTable } from '@/components/List/TorrentTable';
 import { TopBar } from '@/components/Layout/TopBar';
 import { Sidebar } from '@/components/Layout/Sidebar';
+import { AddTorrent } from '@/components/Modals/AddTorrent';
+import { useUi } from '@/stores/ui';
 import { Navigate } from 'react-router-dom';
 
 export default function TorrentListPage() {
   const { state, error, authError } = useSync();
+  const activeModal = useUi((s) => s.activeModal);
   if (authError) return <Navigate to="/login" replace />;
 
   return (
@@ -18,6 +21,7 @@ export default function TorrentListPage() {
         </div>
       </div>
       {error && <div className="border-t border-danger text-danger px-3 py-1 text-xs">{error}</div>}
+      {activeModal === 'add' && <AddTorrent categories={Object.keys(state.categories)} />}
     </div>
   );
 }
