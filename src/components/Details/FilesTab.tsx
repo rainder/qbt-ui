@@ -1,5 +1,6 @@
+import { useRef, useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { fetchFiles, setFilePriority, FilePriority, type FilePriorityValue } from '@/api/torrents';
+import { fetchFiles, setFilePriority, renameFile, FilePriority, type FilePriorityValue } from '@/api/torrents';
 import { formatBytes } from '@/lib/format';
 import { ProgressBar } from '@/components/List/ProgressBar';
 import { Select } from '@/components/ui/Select';
@@ -13,6 +14,9 @@ const PRIORITY_OPTIONS: { value: FilePriorityValue; label: string }[] = [
 
 const KNOWN_PRIORITIES = new Set<number>(PRIORITY_OPTIONS.map((p) => p.value));
 
+const inputCls =
+  'bg-canvas-inset border border-border-default rounded-md px-2 py-0.5 text-sm focus-accent w-full outline-none';
+
 export function FilesTab({ hash }: { hash: string }) {
   const qc = useQueryClient();
   const q = useQuery({
@@ -21,9 +25,41 @@ export function FilesTab({ hash }: { hash: string }) {
     refetchInterval: 3000,
   });
 
+  const [editingIndex, setEditingIndex] = useState<number | null>(null);
+  const [editingValue, setEditingValue] = useState('');
+  // Track original path so we can send proper oldPath
+  const editingOrigPath = useRef<string>('');
+
   async function changePriority(fileIndex: number, priority: FilePriorityValue) {
     await setFilePriority(hash, [fileIndex], priority);
     qc.invalidateQueries({ queryKey: ['files', hash] });
+  }
+
+  function startEdit(index: number, name: string) {
+    editingOrigPath.current = name;
+    // Show just the basename for editing
+    const parts = name.split('/');
+    setEditingValue(parts[parts.length - 1]);
+    setEditingIndex(index);
+  }
+
+  function cancelEdit() {
+    setEditingIndex(null);
+    setEditingValue('');
+    editingOrigPath.current = '';
+  }
+
+  async function confirmEdit() {
+    if (editingIndex === null) return;
+    const oldPath = editingOrigPath.current;
+    const parts = oldPath.split('/');
+    parts[parts.length - 1] = editingValue;
+    const newPath = parts.join('/');
+    if (newPath !== oldPath && editingValue.trim() !== '') {
+      await renameFile(hash, oldPath, newPath);
+      qc.invalidateQueries({ queryKey: ['files', hash] });
+    }
+    cancelEdit();
   }
 
   if (q.isLoading) return <div className="text-fg-muted text-sm">Loading files…</div>;
@@ -37,6 +73,7 @@ export function FilesTab({ hash }: { hash: string }) {
           <th className="text-right w-20 px-3">Size</th>
           <th className="w-28 px-3">Progress</th>
           <th className="w-24 px-3">Priority</th>
+          <th className="w-20 px-3">Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -44,9 +81,26 @@ export function FilesTab({ hash }: { hash: string }) {
           const value: FilePriorityValue = KNOWN_PRIORITIES.has(f.priority)
             ? (f.priority as FilePriorityValue)
             : FilePriority.Normal;
+          const isEditing = editingIndex === f.index;
           return (
             <tr key={f.index} className="border-b border-border-muted hover:bg-canvas-subtle text-sm">
-              <td className="py-2 px-3 truncate text-fg-default">{f.name}</td>
+              <td className="py-2 px-3 truncate text-fg-default">
+                {isEditing ? (
+                  <input
+                    className={inputCls}
+                    autoFocus
+                    value={editingValue}
+                    onChange={(e) => setEditingValue(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') { e.preventDefault(); void confirmEdit(); }
+                      if (e.key === 'Escape') { e.preventDefault(); cancelEdit(); }
+                    }}
+                    onBlur={() => cancelEdit()}
+                  />
+                ) : (
+                  <span>{f.name}</span>
+                )}
+              </td>
               <td className="text-right px-3 tabular-nums text-fg-default whitespace-nowrap">{formatBytes(f.size)}</td>
               <td className="px-3"><ProgressBar value={f.progress} complete={f.progress >= 1} /></td>
               <td className="px-3">
@@ -62,6 +116,16 @@ export function FilesTab({ hash }: { hash: string }) {
                     <option key={p.value} value={p.value}>{p.label}</option>
                   ))}
                 </Select>
+              </td>
+              <td className="px-3 text-right">
+                {!isEditing && (
+                  <button
+                    className="bg-canvas-subtle hover:bg-border-default text-fg-default border border-border-default rounded-md px-2 py-0.5 text-xs font-medium"
+                    onClick={() => startEdit(f.index, f.name)}
+                  >
+                    Rename
+                  </button>
+                )}
               </td>
             </tr>
           );

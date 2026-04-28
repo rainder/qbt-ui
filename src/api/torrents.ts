@@ -88,6 +88,21 @@ export const fetchPeers = (hash: string) =>
   apiGet<{ peers: Record<string, TorrentPeer> }>('/sync/torrentPeers', { hash, rid: 0 });
 export const fetchTrackers = (hash: string) => apiGet<TorrentTracker[]>('/torrents/trackers', { hash });
 
+export const renameFile = (hash: string, oldPath: string, newPath: string) =>
+  apiPost('/torrents/renameFile', { hash, oldPath, newPath });
+
+export const renameFolder = (hash: string, oldPath: string, newPath: string) =>
+  apiPost('/torrents/renameFolder', { hash, oldPath, newPath });
+
+export const addTrackers = (hash: string, urls: string[]) =>
+  apiPost('/torrents/addTrackers', { hash, urls: urls.join('\n') });
+
+export const removeTrackers = (hash: string, urls: string[]) =>
+  apiPost('/torrents/removeTrackers', { hash, urls: urls.join('|') });
+
+export const editTracker = (hash: string, origUrl: string, newUrl: string) =>
+  apiPost('/torrents/editTracker', { hash, origUrl, newUrl });
+
 export interface AddTorrentInput {
   files?: File[];
   urls?: string;          // newline-separated magnet/HTTP URLs
