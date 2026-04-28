@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { formatBytes, formatSpeed, formatEta, formatRatio } from './format';
+import { formatBytes, formatSpeed, formatEta, formatRatio, formatRelativeTime } from './format';
 
 describe('formatBytes', () => {
   it('formats zero', () => expect(formatBytes(0)).toBe('0 B'));
@@ -26,4 +26,16 @@ describe('formatEta', () => {
 describe('formatRatio', () => {
   it('two decimals', () => expect(formatRatio(1.234567)).toBe('1.23'));
   it('shows ∞ for -1 sentinel', () => expect(formatRatio(-1)).toBe('∞'));
+});
+
+describe('formatRelativeTime', () => {
+  const NOW = 1_700_000_000; // unix seconds
+  it('dash for zero/missing', () => expect(formatRelativeTime(0, NOW)).toBe('—'));
+  it('"just now" under 1 minute', () => expect(formatRelativeTime(NOW - 30, NOW)).toBe('just now'));
+  it('minutes', () => expect(formatRelativeTime(NOW - 600, NOW)).toBe('10m ago'));
+  it('hours', () => expect(formatRelativeTime(NOW - 7200, NOW)).toBe('2h ago'));
+  it('days', () => expect(formatRelativeTime(NOW - 3 * 86_400, NOW)).toBe('3d ago'));
+  it('weeks', () => expect(formatRelativeTime(NOW - 14 * 86_400, NOW)).toBe('2w ago'));
+  it('months', () => expect(formatRelativeTime(NOW - 90 * 86_400, NOW)).toBe('3mo ago'));
+  it('years', () => expect(formatRelativeTime(NOW - 730 * 86_400, NOW)).toBe('2y ago'));
 });

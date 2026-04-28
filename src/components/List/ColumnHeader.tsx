@@ -10,6 +10,7 @@ const COLS: { key: SortKey; label: string; width: string; align?: string }[] = [
   { key: 'upspeed',  label: 'Up',       width: 'w-20', align: 'text-right' },
   { key: 'eta',      label: 'Eta',      width: 'w-16', align: 'text-right' },
   { key: 'ratio',    label: 'Ratio',    width: 'w-14', align: 'text-right' },
+  { key: 'added_on', label: 'Added',    width: 'w-20', align: 'text-right' },
 ];
 
 export function ColumnHeader() {

@@ -101,7 +101,7 @@ function Row({
       className={clsx(
         'w-full text-left flex items-center justify-between gap-2 rounded-md px-3 py-1.5 text-sm transition-colors',
         active
-          ? 'bg-canvas-subtle text-fg-default font-semibold sidebar-active'
+          ? 'bg-accent-subtle text-fg-default font-semibold'
           : 'text-fg-default hover:bg-canvas-subtle',
       )}
     >
