@@ -1,9 +1,7 @@
 import { useEffect, useState } from 'react';
 import { fetchPlugins } from '@/api/search';
 import type { SearchPlugin } from '@/api/types';
-
-const selectCls =
-  'bg-canvas-inset border border-border-default rounded-md px-3 py-[5px] text-sm text-fg-default focus-accent';
+import { Select } from '@/components/ui/Select';
 
 export function SearchBar({ onStart }: {
   onStart: (pattern: string, plugins: 'enabled' | string[], category: string) => void;
@@ -30,11 +28,7 @@ export function SearchBar({ onStart }: {
         onChange={(e) => setPattern(e.target.value)}
         className="flex-1 bg-canvas-inset border border-border-default rounded-md px-3 py-[5px] text-base text-fg-default placeholder:text-fg-subtle focus-accent"
       />
-      <select
-        value={category}
-        onChange={(e) => setCategory(e.target.value)}
-        className={selectCls}
-      >
+      <Select value={category} onChange={(e) => setCategory(e.target.value)}>
         <option value="all">All categories</option>
         <option value="movies">Movies</option>
         <option value="tv">TV</option>
@@ -44,17 +38,13 @@ export function SearchBar({ onStart }: {
         <option value="software">Software</option>
         <option value="pictures">Pictures</option>
         <option value="books">Books</option>
-      </select>
-      <select
-        value={plugin}
-        onChange={(e) => setPlugin(e.target.value)}
-        className={selectCls}
-      >
+      </Select>
+      <Select value={plugin} onChange={(e) => setPlugin(e.target.value)}>
         <option value="enabled">All enabled</option>
         {plugins.filter((p) => p.enabled).map((p) => (
           <option key={p.name} value={p.name}>{p.fullName}</option>
         ))}
-      </select>
+      </Select>
       <button
         type="submit"
         className="bg-success-emphasis hover:bg-success-emphasis-h text-fg-on-emphasis border border-subtle rounded-md px-3 py-[5px] text-sm font-medium"

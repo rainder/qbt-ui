@@ -79,4 +79,37 @@
     box-shadow: 0 0 0 3px rgba(56, 139, 253, 0.3);
   }
 
+  /* Custom select with chevron — replaces OS-default arrow */
+  .select-styled {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'><path d='M3 5l3 3 3-3' stroke='%237d8590' fill='none' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    padding-right: 28px;
+  }
+  .select-styled option {
+    background-color: var(--color-canvas);
+    color: var(--color-fg-default);
+  }
+
+  /* Indeterminate progress strip */
+  @keyframes loading-bar {
+    0%   { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+  .loading-bar {
+    position: relative;
+    overflow: hidden;
+    height: 2px;
+    background: var(--color-canvas-subtle);
+  }
+  .loading-bar::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    width: 40%;
+    background: linear-gradient(90deg, transparent, var(--color-accent-fg), transparent);
+    animation: loading-bar 1.2s ease-in-out infinite;
+  }
 }

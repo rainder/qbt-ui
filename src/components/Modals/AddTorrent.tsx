@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Modal, useCloseModal } from './Modal';
 import { addTorrent } from '@/api/torrents';
+import { Select } from '@/components/ui/Select';
 
 const inputCls =
   'block w-full bg-canvas-inset border border-border-default rounded-md px-3 py-[5px] text-sm text-fg-default focus-accent';
@@ -64,14 +65,14 @@ export function AddTorrent({ initialUrl = '', categories }: {
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label className="block text-sm font-medium text-fg-default mb-1">Category</label>
-            <select
+            <Select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className={inputCls}
+              className="block w-full"
             >
               <option value="">(none)</option>
               {categories.map((c) => <option key={c} value={c}>{c}</option>)}
-            </select>
+            </Select>
           </div>
           <div>
             <label className="block text-sm font-medium text-fg-default mb-1">Tags (comma)</label>
