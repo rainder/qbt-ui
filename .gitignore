@@ -31,3 +31,4 @@ test-results
 .env
 .env.local
 .superpowers/
+*.tsbuildinfo
