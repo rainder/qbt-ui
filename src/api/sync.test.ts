@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import type { SyncMainData, Torrent } from './types';
+import type { Torrent } from './types';
 import { applyDiff, emptyState, type SyncState } from './sync';
 
 const baseTorrent = (over: Partial<Torrent>): Partial<Torrent> => ({
