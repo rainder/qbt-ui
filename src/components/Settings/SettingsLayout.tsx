@@ -30,7 +30,7 @@ export function SettingsLayout({ pluginsTab }: { pluginsTab: React.ReactNode }) 
           {TABS.map((t) => (
             <NavLink
               key={t.to}
-              to={t.to}
+              to={`/settings/${t.to}`}
               className={({ isActive }) =>
                 [
                   'flex items-center rounded-md px-3 py-1.5 text-sm transition-colors',
