@@ -22,13 +22,13 @@ export function SettingsLayout({ pluginsTab }: { pluginsTab: React.ReactNode }) 
     <div className="h-screen flex flex-col">
       <TopBar serverState={state.serverState} />
       <div className="flex-1 min-h-0 flex">
-        <nav className="w-48 bg-bg2 border-r border-border py-3 text-xs">
+        <nav className="w-48 bg-bg2 border-r border-border py-3 px-2 text-xs flex flex-col gap-0.5">
           {TABS.map((t) => (
             <NavLink key={t.to} to={t.to}
               className={({ isActive }) =>
-                `block py-1 border-l-2 ${isActive
-                  ? 'bg-accent-bg text-accent border-l-accent pl-2.5 pr-3'
-                  : 'text-muted hover:bg-bg3 border-l-transparent pl-2.5 pr-3'}`}
+                `block rounded px-2.5 py-1.5 text-[12px] transition-colors ${isActive
+                  ? 'bg-accent-bg text-fg2 font-medium ring-1 ring-inset ring-accent/40'
+                  : 'text-fg hover:bg-bg3 hover:text-fg2'}`}
             >{t.label}</NavLink>
           ))}
         </nav>

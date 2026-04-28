@@ -67,9 +67,9 @@ export function Sidebar({
 
 function Section({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <div className="mb-4">
-      <div className="px-3 mb-1.5 text-muted text-[10px] font-semibold uppercase tracking-wider">{label}</div>
-      {children}
+    <div className="mb-5">
+      <div className="px-3 mb-2 text-muted text-[10px] font-semibold uppercase tracking-[0.08em]">{label}</div>
+      <div className="px-2 flex flex-col gap-0.5">{children}</div>
     </div>
   );
 }
@@ -78,13 +78,26 @@ function Row({ children, active, onClick, count }: {
   children: React.ReactNode; active: boolean; onClick: () => void; count?: number;
 }) {
   return (
-    <button onClick={onClick}
-      className={clsx('w-full text-left py-1 flex justify-between gap-2 border-l-2',
+    <button
+      onClick={onClick}
+      className={clsx(
+        'w-full text-left flex items-center justify-between gap-2 rounded px-2.5 py-1.5 text-[12px] transition-colors',
         active
-          ? 'bg-accent-bg text-accent border-l-accent pl-2.5 pr-3'
-          : 'text-fg hover:bg-bg3 border-l-transparent pl-2.5 pr-3')}>
+          ? 'bg-accent-bg text-fg2 font-medium ring-1 ring-inset ring-accent/40'
+          : 'text-fg hover:bg-bg3 hover:text-fg2',
+      )}
+    >
       <span className="truncate">{children}</span>
-      {count !== undefined && <span className="text-muted">{count}</span>}
+      {count !== undefined && (
+        <span
+          className={clsx(
+            'shrink-0 rounded-full px-1.5 py-0 text-[10px] font-medium tabular-nums',
+            active ? 'bg-accent text-bg' : 'bg-bg3 text-muted',
+          )}
+        >
+          {count}
+        </span>
+      )}
     </button>
   );
 }
