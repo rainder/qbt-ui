@@ -5,18 +5,20 @@ import { formatBytes, formatSpeed, formatEta, formatRelativeTime } from '@/lib/f
 import clsx from 'clsx';
 
 export function TorrentRow({
-  t, selected, active, onClick, onDouble,
+  t, selected, active, onClick, onDouble, onContextMenu,
 }: {
   t: Partial<Torrent>;
   selected: boolean;
   active: boolean;
   onClick: (e: React.MouseEvent) => void;
   onDouble: () => void;
+  onContextMenu?: (e: React.MouseEvent) => void;
 }) {
   return (
     <div
       onClick={onClick}
       onDoubleClick={onDouble}
+      onContextMenu={onContextMenu}
       className={clsx(
         'flex items-center gap-3 px-4 h-11 border-b border-border-muted transition-colors cursor-default',
         selected ? 'bg-accent-subtle' : 'hover:bg-canvas-subtle',
