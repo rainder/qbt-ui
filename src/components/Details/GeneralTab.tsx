@@ -2,8 +2,8 @@ import type { Torrent } from '@/api/types';
 import { formatBytes, formatRatio, formatEta, formatSpeed } from '@/lib/format';
 
 export function GeneralTab({ t }: { t: Partial<Torrent> }) {
-  const rows: [string, string][] = [
-    ['hash', t.hash ?? ''],
+  const rows: [string, string, boolean?][] = [
+    ['hash', t.hash ?? '', true],
     ['name', t.name ?? ''],
     ['state', t.state ?? ''],
     ['size', formatBytes(t.size ?? 0)],
@@ -22,10 +22,10 @@ export function GeneralTab({ t }: { t: Partial<Torrent> }) {
   return (
     <table className="w-full">
       <tbody>
-        {rows.map(([k, v]) => (
-          <tr key={k} className="border-b border-dotted border-border">
-            <td className="text-muted py-0.5 pr-3 w-32">{k}</td>
-            <td className="text-fg2 break-all">{v}</td>
+        {rows.map(([k, v, mono]) => (
+          <tr key={k} className="border-b border-border">
+            <td className="text-muted text-[11px] font-medium uppercase tracking-wide py-0.5 pr-3 w-32">{k}</td>
+            <td className={`text-fg2 break-all ${mono ? 'font-mono' : ''}`}>{v}</td>
           </tr>
         ))}
       </tbody>

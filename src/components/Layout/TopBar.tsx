@@ -9,9 +9,11 @@ export function TopBar({ serverState }: { serverState?: ServerState }) {
   const { openModal, setFilterText, filterText } = useUi();
   const loc = useLocation();
   return (
-    <div className="h-11 border-b border-border flex items-center gap-4 px-3 text-fg">
-      <div className="text-fg2">qbt</div>
-      <div className="text-muted">|</div>
+    <div className="h-12 border-b border-border bg-bg flex items-center gap-4 px-3 text-fg">
+      <div className="flex items-center gap-2 text-fg2 font-semibold">
+        <span className="w-2 h-2 rounded-full bg-accent"></span>
+        qbt
+      </div>
       <Stat label="↓" value={formatSpeed(stats.dlSpeed)} />
       <Stat label="↑" value={formatSpeed(stats.upSpeed)} />
       <Stat label="ratio" value={formatRatio(stats.ratio)} />
@@ -20,24 +22,24 @@ export function TopBar({ serverState }: { serverState?: ServerState }) {
       <input
         value={filterText} onChange={(e) => setFilterText(e.target.value)}
         placeholder="/ filter"
-        className="border border-border bg-bg px-2 py-0.5 text-xs w-48"
+        className="bg-bg3 border border-border2 text-fg rounded px-3 py-1 placeholder:text-muted focus:outline-none focus:border-accent text-xs w-48"
       />
       <button onClick={() => openModal('add')}
-              className="border border-accent text-accent px-2 py-0.5 text-xs">+ add</button>
+              className="bg-[#238636] hover:bg-[#2ea043] text-white px-3 py-1 text-xs font-medium rounded">+ add</button>
       <Link to="/search" className={navCls(loc.pathname === '/search')}>search</Link>
       <Link to="/settings" className={navCls(loc.pathname.startsWith('/settings'))}>settings</Link>
-      <button onClick={() => openModal('help')} className="text-muted hover:text-fg2 text-xs">?</button>
+      <button onClick={() => openModal('help')} className="text-muted text-xs hover:text-fg2 px-2 py-1">?</button>
     </div>
   );
 }
 
 function navCls(active: boolean) {
-  return `px-2 py-0.5 text-xs ${active ? 'text-fg2 border-b border-accent' : 'text-muted hover:text-fg2'}`;
+  return `px-2 py-1 text-xs rounded ${active ? 'bg-accent-bg text-accent' : 'text-muted hover:text-fg2'}`;
 }
 
 function Stat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="text-xs">
+    <div className="text-[11px]">
       <span className="text-muted">{label}</span>{' '}
       <span className="text-fg2">{value}</span>
     </div>

@@ -21,10 +21,10 @@ export function SearchBar({ onStart }: {
         autoFocus
         placeholder="query"
         value={pattern} onChange={(e) => setPattern(e.target.value)}
-        className="flex-1 border border-border bg-bg px-2 py-1 text-fg2"
+        className="flex-1 bg-bg3 border border-border2 rounded px-3 py-1.5 text-fg2 focus:outline-none focus:border-accent"
       />
       <select value={category} onChange={(e) => setCategory(e.target.value)}
-              className="border border-border bg-bg px-2 py-1 text-fg2">
+              className="bg-bg3 border border-border2 rounded px-3 py-1.5 text-fg2 focus:outline-none focus:border-accent">
         <option value="all">all categories</option>
         <option value="movies">movies</option>
         <option value="tv">tv</option>
@@ -36,13 +36,13 @@ export function SearchBar({ onStart }: {
         <option value="books">books</option>
       </select>
       <select value={plugin} onChange={(e) => setPlugin(e.target.value)}
-              className="border border-border bg-bg px-2 py-1 text-fg2">
+              className="bg-bg3 border border-border2 rounded px-3 py-1.5 text-fg2 focus:outline-none focus:border-accent">
         <option value="enabled">all enabled</option>
         {plugins.filter((p) => p.enabled).map((p) => (
           <option key={p.name} value={p.name}>{p.fullName}</option>
         ))}
       </select>
-      <button type="submit" className="border border-accent text-accent px-3 py-1">search</button>
+      <button type="submit" className="bg-[#238636] hover:bg-[#2ea043] text-white px-4 py-1.5 rounded font-medium">search</button>
     </form>
   );
 }

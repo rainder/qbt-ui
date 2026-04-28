@@ -24,20 +24,23 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="grid place-items-center min-h-screen">
-      <form onSubmit={onSubmit} className="w-80 border border-border p-6 space-y-3 bg-bg2">
-        <div className="text-fg2 text-lg">qbt / login</div>
-        <label className="block text-xs text-muted">USERNAME
+    <div className="grid place-items-center min-h-screen bg-bg">
+      <form onSubmit={onSubmit} className="w-80 border border-border2 p-6 space-y-4 bg-bg3 rounded-md shadow-2xl">
+        <div className="flex items-center gap-2 text-fg2 font-semibold text-md">
+          <span className="w-2 h-2 rounded-full bg-accent"></span>
+          qbt <span className="text-muted font-normal">/ login</span>
+        </div>
+        <label className="block text-[10px] font-medium uppercase text-muted">Username
           <input
-            className="block w-full mt-1 border border-border bg-bg px-2 py-1 text-fg2"
+            className="block w-full mt-1 bg-bg3 border border-border2 rounded px-3 py-1.5 text-fg2 focus:outline-none focus:border-accent"
             value={username} onChange={(e) => setUsername(e.target.value)}
             autoFocus required
           />
         </label>
-        <label className="block text-xs text-muted">PASSWORD
+        <label className="block text-[10px] font-medium uppercase text-muted">Password
           <input
             type="password"
-            className="block w-full mt-1 border border-border bg-bg px-2 py-1 text-fg2"
+            className="block w-full mt-1 bg-bg3 border border-border2 rounded px-3 py-1.5 text-fg2 focus:outline-none focus:border-accent"
             value={password} onChange={(e) => setPassword(e.target.value)}
             required
           />
@@ -45,7 +48,7 @@ export default function LoginPage() {
         {error && <div className="text-danger text-xs">{error}</div>}
         <button
           type="submit" disabled={busy}
-          className="w-full border border-accent text-accent px-2 py-1 disabled:opacity-50"
+          className="w-full bg-[#238636] hover:bg-[#2ea043] text-white px-3 py-1.5 rounded font-medium disabled:opacity-50"
         >{busy ? '...' : 'Connect'}</button>
       </form>
     </div>

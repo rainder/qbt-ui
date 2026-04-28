@@ -67,8 +67,8 @@ export function Sidebar({
 
 function Section({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <div className="mb-3">
-      <div className="px-3 mb-1 text-muted uppercase tracking-wide">{label}</div>
+    <div className="mb-4">
+      <div className="px-3 mb-1 text-muted text-[10px] uppercase tracking-wide">{label}</div>
       {children}
     </div>
   );
@@ -79,8 +79,10 @@ function Row({ children, active, onClick, count }: {
 }) {
   return (
     <button onClick={onClick}
-      className={clsx('w-full text-left px-3 py-0.5 flex justify-between gap-2',
-        active ? 'bg-bg2 text-fg2' : 'text-fg hover:bg-bg2')}>
+      className={clsx('w-full text-left py-1 flex justify-between gap-2 border-l-2',
+        active
+          ? 'bg-accent-bg text-accent border-l-accent pl-2.5 pr-3'
+          : 'text-fg hover:bg-bg3 border-l-transparent pl-2.5 pr-3')}>
       <span className="truncate">{children}</span>
       {count !== undefined && <span className="text-muted">{count}</span>}
     </button>

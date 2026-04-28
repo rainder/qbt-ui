@@ -1,25 +1,49 @@
 @import "tailwindcss";
 
 @theme {
-  /* Colors */
-  --color-bg: #0a0e14;
-  --color-bg2: #0f141b;
-  --color-fg: #b3b1ad;
-  --color-fg2: #e6e1cf;
-  --color-muted: #626a73;
-  --color-border: #1f242c;
-  --color-accent: #59c2ff;
-  --color-ok: #aad94c;
-  --color-warn: #ffb454;
-  --color-danger: #f07178;
+  /* Colors — Design C: Modern Dashboard (GitHub-flavored dark) */
+  --color-bg:      #0d1117;
+  --color-bg2:     #010409;
+  --color-bg3:     #161b22;
+  --color-fg:      #c9d1d9;
+  --color-fg2:     #f0f6fc;
+  --color-muted:   #8b949e;
+  --color-border:  #21262d;
+  --color-border2: #30363d;
+  --color-accent:  #58a6ff;
+  --color-ok:      #3fb950;
+  --color-warn:    #d29922;
+  --color-danger:  #f85149;
+  --color-success: #238636;
+  --color-success-h: #2ea043;
 
   /* Font families */
-  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+  --font-mono: ui-monospace, SFMono-Regular, monospace;
 
   /* Font sizes */
-  --text-xs: 11px;
-  --text-sm: 12px;
+  --text-xs:   11px;
+  --text-sm:   12px;
   --text-base: 13px;
-  --text-md: 14px;
-  --text-lg: 16px;
+  --text-md:   14px;
+  --text-lg:   16px;
+}
+
+@layer utilities {
+  /* Translucent background tints */
+  .bg-accent-bg   { background-color: rgba(88, 166, 255, 0.15); }
+  .bg-ok-bg       { background-color: rgba(63, 185, 80, 0.15); }
+  .bg-warn-bg     { background-color: rgba(210, 153, 34, 0.15); }
+  .bg-danger-bg   { background-color: rgba(248, 81, 73, 0.15); }
+  .bg-muted-soft  { background-color: rgba(139, 148, 158, 0.15); }
+
+  /* Translucent border tints */
+  .border-accent-soft { border-color: rgba(88, 166, 255, 0.30); }
+  .border-ok-soft     { border-color: rgba(63, 185, 80, 0.30); }
+  .border-warn-soft   { border-color: rgba(210, 153, 34, 0.30); }
+  .border-danger-soft { border-color: rgba(248, 81, 73, 0.30); }
+  .border-muted-soft  { border-color: rgba(139, 148, 158, 0.30); }
+
+  /* Progress bar fills */
+  .bar-fill      { background: linear-gradient(90deg, #58a6ff 0%, #58a6ff 100%); }
+  .bar-fill-done { background: linear-gradient(90deg, #58a6ff 0%, #3fb950 100%); }
 }

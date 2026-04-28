@@ -60,7 +60,7 @@ export function PrefsTab({ fields }: { fields: FieldDef[] }) {
                 }
                 update(f.key, next);
               }}
-              className="border border-border bg-bg px-2 py-1 text-fg2 w-48"
+              className="bg-bg3 border border-border2 rounded px-3 py-1.5 text-fg2 focus:outline-none focus:border-accent w-48"
             />
             {f.unit && <span className="text-muted">{f.unit}</span>}
           </label>
@@ -69,11 +69,11 @@ export function PrefsTab({ fields }: { fields: FieldDef[] }) {
       {err && <div className="text-danger">{err}</div>}
       <div className="flex gap-2 pt-2">
         <button onClick={save} disabled={busy || Object.keys(dirty).length === 0}
-                className="px-3 py-1 border border-accent text-accent disabled:opacity-50">
+                className="bg-[#238636] hover:bg-[#2ea043] text-white px-3 py-1.5 rounded font-medium disabled:opacity-50">
           {busy ? '...' : 'save'}
         </button>
         <button onClick={() => setDirty({})} disabled={Object.keys(dirty).length === 0}
-                className="px-3 py-1 border border-border disabled:opacity-50">revert</button>
+                className="border border-border2 text-fg hover:bg-bg2 px-3 py-1.5 rounded disabled:opacity-50">revert</button>
       </div>
     </div>
   );

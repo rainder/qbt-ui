@@ -28,9 +28,9 @@ export function ConfirmDelete() {
           also delete files on disk
         </label>
         <div className="flex justify-end gap-2 pt-2">
-          <button onClick={close} className="px-3 py-1 border border-border">cancel</button>
+          <button onClick={close} className="border border-border2 text-fg hover:bg-bg2 px-3 py-1.5 rounded">cancel</button>
           <button onClick={submit} disabled={busy}
-                  className="px-3 py-1 border border-danger text-danger disabled:opacity-50">
+                  className="bg-danger hover:opacity-90 text-white px-3 py-1.5 rounded font-medium disabled:opacity-50">
             {busy ? '...' : 'delete'}
           </button>
         </div>

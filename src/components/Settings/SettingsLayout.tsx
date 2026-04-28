@@ -26,7 +26,9 @@ export function SettingsLayout({ pluginsTab }: { pluginsTab: React.ReactNode }) 
           {TABS.map((t) => (
             <NavLink key={t.to} to={t.to}
               className={({ isActive }) =>
-                `block px-3 py-0.5 ${isActive ? 'bg-bg2 text-fg2' : 'text-muted hover:text-fg2'}`}
+                `block py-1 border-l-2 ${isActive
+                  ? 'bg-accent-bg text-accent border-l-accent pl-2.5 pr-3'
+                  : 'text-muted hover:bg-bg3 border-l-transparent pl-2.5 pr-3'}`}
             >{t.label}</NavLink>
           ))}
         </nav>

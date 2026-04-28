@@ -35,14 +35,14 @@ export function AddTorrent({ initialUrl = '', categories }: {
   return (
     <Modal title="add torrent" onClose={close}>
       <form onSubmit={submit} className="space-y-3 text-xs w-[28rem]">
-        <label className="block text-muted">URLS / MAGNETS (one per line)
+        <label className="block text-muted text-[10px] font-medium uppercase">URLs / Magnets (one per line)
           <textarea
-            className="mt-1 block w-full h-24 border border-border bg-bg px-2 py-1 text-fg2"
+            className="mt-1 block w-full h-24 bg-bg3 border border-border2 rounded px-3 py-1.5 text-fg2 focus:outline-none focus:border-accent"
             value={urls} onChange={(e) => setUrls(e.target.value)}
             placeholder="magnet:?xt=urn:btih:..."
           />
         </label>
-        <label className="block text-muted">FILES
+        <label className="block text-muted text-[10px] font-medium uppercase">Files
           <input
             type="file" multiple accept=".torrent"
             onChange={(e) => setFiles(Array.from(e.target.files ?? []))}
@@ -50,15 +50,15 @@ export function AddTorrent({ initialUrl = '', categories }: {
           />
         </label>
         <div className="grid grid-cols-2 gap-3">
-          <label className="block text-muted">CATEGORY
+          <label className="block text-muted text-[10px] font-medium uppercase">Category
             <select value={category} onChange={(e) => setCategory(e.target.value)}
-                    className="mt-1 block w-full border border-border bg-bg px-2 py-1 text-fg2">
+                    className="mt-1 block w-full bg-bg3 border border-border2 rounded px-3 py-1.5 text-fg2 focus:outline-none focus:border-accent">
               <option value="">(none)</option>
               {categories.map((c) => <option key={c} value={c}>{c}</option>)}
             </select>
           </label>
-          <label className="block text-muted">TAGS (comma)
-            <input className="mt-1 block w-full border border-border bg-bg px-2 py-1 text-fg2"
+          <label className="block text-muted text-[10px] font-medium uppercase">Tags (comma)
+            <input className="mt-1 block w-full bg-bg3 border border-border2 rounded px-3 py-1.5 text-fg2 focus:outline-none focus:border-accent"
                    value={tags} onChange={(e) => setTags(e.target.value)} />
           </label>
         </div>
@@ -68,9 +68,9 @@ export function AddTorrent({ initialUrl = '', categories }: {
         </label>
         {err && <div className="text-danger">{err}</div>}
         <div className="flex justify-end gap-2 pt-2">
-          <button type="button" onClick={close} className="px-3 py-1 border border-border">cancel</button>
+          <button type="button" onClick={close} className="border border-border2 text-fg hover:bg-bg2 px-3 py-1.5 rounded">cancel</button>
           <button type="submit" disabled={busy}
-                  className="px-3 py-1 border border-accent text-accent disabled:opacity-50">
+                  className="bg-[#238636] hover:bg-[#2ea043] text-white px-3 py-1.5 rounded font-medium disabled:opacity-50">
             {busy ? '...' : 'add'}
           </button>
         </div>

@@ -14,16 +14,16 @@ export function FilesTab({ hash }: { hash: string }) {
   return (
     <table className="w-full">
       <thead>
-        <tr className="text-muted uppercase tracking-wide text-[10px]">
-          <th className="text-left py-1">name</th>
-          <th className="text-right w-20">size</th>
-          <th className="w-28">progress</th>
-          <th className="text-right w-12">prio</th>
+        <tr className="text-muted text-[11px] font-medium border-b border-border">
+          <th className="text-left py-1">Name</th>
+          <th className="text-right w-20">Size</th>
+          <th className="w-28">Progress</th>
+          <th className="text-right w-12">Prio</th>
         </tr>
       </thead>
       <tbody>
         {(q.data ?? []).map((f) => (
-          <tr key={f.index} className="border-b border-dotted border-border">
+          <tr key={f.index} className="border-b border-border">
             <td className="py-0.5 truncate text-fg2">{f.name}</td>
             <td className="text-right">{formatBytes(f.size)}</td>
             <td><ProgressBar value={f.progress} complete={f.progress >= 1} /></td>

@@ -14,19 +14,19 @@ export function PeersTab({ hash }: { hash: string }) {
   return (
     <table className="w-full">
       <thead>
-        <tr className="text-muted uppercase tracking-wide text-[10px]">
-          <th className="text-left py-1 w-44">ip</th>
-          <th className="text-left">client</th>
+        <tr className="text-muted text-[11px] font-medium border-b border-border">
+          <th className="text-left py-1 w-44">IP</th>
+          <th className="text-left">Client</th>
           <th className="text-right w-20">↓</th>
           <th className="text-right w-20">↑</th>
-          <th className="text-right w-16">progress</th>
-          <th className="text-left w-20">flags</th>
+          <th className="text-right w-16">Progress</th>
+          <th className="text-left w-20">Flags</th>
         </tr>
       </thead>
       <tbody>
         {peers.map((p, i) => (
-          <tr key={i} className="border-b border-dotted border-border">
-            <td className="py-0.5 text-fg2">{p.ip}:{p.port}</td>
+          <tr key={i} className="border-b border-border">
+            <td className="py-0.5 text-fg2 font-mono">{p.ip}:{p.port}</td>
             <td className="truncate">{p.client}</td>
             <td className="text-right">{formatSpeed(p.dl_speed)}</td>
             <td className="text-right">{formatSpeed(p.up_speed)}</td>

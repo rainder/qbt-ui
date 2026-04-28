@@ -3,20 +3,20 @@ import { render, screen } from '@testing-library/react';
 import { StatusPill } from './StatusPill';
 
 describe('StatusPill', () => {
-  it('renders DL for downloading', () => {
+  it('renders Down for downloading', () => {
     render(<StatusPill state="downloading" />);
-    expect(screen.getByText('DL')).toBeInTheDocument();
+    expect(screen.getByText('Down')).toBeInTheDocument();
   });
-  it('renders SE for stalledUP', () => {
+  it('renders Seed for stalledUP', () => {
     render(<StatusPill state="stalledUP" />);
-    expect(screen.getByText('SE')).toBeInTheDocument();
+    expect(screen.getByText('Seed')).toBeInTheDocument();
   });
-  it('renders PA for pausedDL', () => {
+  it('renders Pause for pausedDL', () => {
     render(<StatusPill state="pausedDL" />);
-    expect(screen.getByText('PA')).toBeInTheDocument();
+    expect(screen.getByText('Pause')).toBeInTheDocument();
   });
-  it('renders ER for error', () => {
+  it('renders Error for error', () => {
     render(<StatusPill state="error" />);
-    expect(screen.getByText('ER')).toBeInTheDocument();
+    expect(screen.getByText('Error')).toBeInTheDocument();
   });
 });
