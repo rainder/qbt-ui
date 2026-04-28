@@ -36,7 +36,7 @@ export function Sidebar({
   }, [torrents]);
 
   return (
-    <div className="w-48 border-r border-border h-full overflow-auto py-2 text-xs">
+    <div className="w-48 bg-bg2 border-r border-border h-full overflow-auto py-3 text-xs">
       <Section label="STATUS">
         {STATUSES.map((s) => (
           <Row key={s.key} active={filterStatus === s.key}
@@ -68,7 +68,7 @@ export function Sidebar({
 function Section({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="mb-4">
-      <div className="px-3 mb-1 text-muted text-[10px] uppercase tracking-wide">{label}</div>
+      <div className="px-3 mb-1.5 text-muted text-[10px] font-semibold uppercase tracking-wider">{label}</div>
       {children}
     </div>
   );

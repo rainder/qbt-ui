@@ -22,7 +22,7 @@ export function SettingsLayout({ pluginsTab }: { pluginsTab: React.ReactNode }) 
     <div className="h-screen flex flex-col">
       <TopBar serverState={state.serverState} />
       <div className="flex-1 min-h-0 flex">
-        <nav className="w-48 border-r border-border py-2 text-xs">
+        <nav className="w-48 bg-bg2 border-r border-border py-3 text-xs">
           {TABS.map((t) => (
             <NavLink key={t.to} to={t.to}
               className={({ isActive }) =>
