@@ -6,6 +6,7 @@ import { AddTorrent } from '@/components/Modals/AddTorrent';
 import { ConfirmDelete } from '@/components/Modals/ConfirmDelete';
 import { SetCategory } from '@/components/Modals/SetCategory';
 import { EditTags } from '@/components/Modals/EditTags';
+import { Help } from '@/components/Modals/Help';
 import { useUi } from '@/stores/ui';
 import { Navigate } from 'react-router-dom';
 
@@ -28,6 +29,7 @@ export default function TorrentListPage() {
       {activeModal === 'delete' && <ConfirmDelete />}
       {activeModal === 'category' && <SetCategory categories={Object.keys(state.categories)} />}
       {activeModal === 'tags' && <EditTags allTags={state.tags} />}
+      {activeModal === 'help' && <Help />}
     </div>
   );
 }
