@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-export type SortKey = 'name' | 'size' | 'state' | 'progress' | 'dlspeed' | 'upspeed' | 'eta' | 'added_on' | 'ratio';
+export type SortKey = 'name' | 'size' | 'state' | 'progress' | 'dlspeed' | 'upspeed' | 'eta' | 'added_on' | 'ratio' | 'category';
 export type SortDir = 'asc' | 'desc';
 export type StatusFilter = 'all' | 'downloading' | 'seeding' | 'paused' | 'completed' | 'active' | 'inactive' | 'errored';
 

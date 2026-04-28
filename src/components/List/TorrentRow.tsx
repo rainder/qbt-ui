@@ -1,7 +1,7 @@
 import type { Torrent } from '@/api/types';
 import { StatusPill } from './StatusPill';
 import { ProgressBar } from './ProgressBar';
-import { formatBytes, formatSpeed, formatEta, formatRatio, formatRelativeTime } from '@/lib/format';
+import { formatBytes, formatSpeed, formatEta, formatRelativeTime } from '@/lib/format';
 import clsx from 'clsx';
 
 export function TorrentRow({
@@ -32,7 +32,7 @@ export function TorrentRow({
       <div className="w-20 text-right tabular-nums text-sm text-fg-default">{formatSpeed(t.dlspeed ?? 0)}</div>
       <div className="w-20 text-right tabular-nums text-sm text-fg-default">{formatSpeed(t.upspeed ?? 0)}</div>
       <div className="w-16 text-right tabular-nums text-sm text-fg-default">{formatEta(t.eta ?? -1)}</div>
-      <div className="w-14 text-right tabular-nums text-sm text-fg-default">{formatRatio(t.ratio ?? 0)}</div>
+      <div className="w-32 truncate text-sm text-fg-muted">{t.category || '—'}</div>
       <div className="w-20 text-right tabular-nums text-sm text-fg-muted">{formatRelativeTime(t.added_on ?? 0)}</div>
     </div>
   );
