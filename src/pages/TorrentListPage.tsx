@@ -3,6 +3,9 @@ import { TorrentTable } from '@/components/List/TorrentTable';
 import { TopBar } from '@/components/Layout/TopBar';
 import { Sidebar } from '@/components/Layout/Sidebar';
 import { AddTorrent } from '@/components/Modals/AddTorrent';
+import { ConfirmDelete } from '@/components/Modals/ConfirmDelete';
+import { SetCategory } from '@/components/Modals/SetCategory';
+import { EditTags } from '@/components/Modals/EditTags';
 import { useUi } from '@/stores/ui';
 import { Navigate } from 'react-router-dom';
 
@@ -22,6 +25,9 @@ export default function TorrentListPage() {
       </div>
       {error && <div className="border-t border-danger text-danger px-3 py-1 text-xs">{error}</div>}
       {activeModal === 'add' && <AddTorrent categories={Object.keys(state.categories)} />}
+      {activeModal === 'delete' && <ConfirmDelete />}
+      {activeModal === 'category' && <SetCategory categories={Object.keys(state.categories)} />}
+      {activeModal === 'tags' && <EditTags allTags={state.tags} />}
     </div>
   );
 }
