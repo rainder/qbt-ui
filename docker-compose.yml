@@ -1,0 +1,43 @@
+# qbt-ui — full stack: qBittorrent + Web UI
+#
+# Quick start:
+#   cp .env.example .env       # adjust ports / volumes as needed
+#   docker compose up -d
+#   open http://localhost:${WEB_PORT:-8080}
+#
+# qBittorrent's classic WebUI (the dated default) stays available at
+# http://localhost:${QBT_PORT:-8888}/ if you ever need it.
+
+services:
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbt-qbittorrent
+    environment:
+      - PUID=${PUID:-1000}
+      - PGID=${PGID:-1000}
+      - TZ=${TZ:-Etc/UTC}
+      - WEBUI_PORT=8080
+    volumes:
+      - ${CONFIG_DIR:-./data/config}:/config
+      - ${DOWNLOADS_DIR:-./data/downloads}:/downloads
+    ports:
+      # Expose qBittorrent's classic UI for emergencies.
+      - "${QBT_PORT:-8888}:8080"
+      # BitTorrent listen ports — adjust as needed.
+      - "${BT_PORT:-6881}:6881"
+      - "${BT_PORT:-6881}:6881/udp"
+    restart: unless-stopped
+
+  qbt-ui:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: qbt-ui
+    depends_on:
+      - qbittorrent
+    environment:
+      - WEB_PORT=80
+      - QBT_BACKEND=http://qbittorrent:8080
+    ports:
+      - "${WEB_PORT:-8080}:80"
+    restart: unless-stopped

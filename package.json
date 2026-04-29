@@ -1,8 +1,20 @@
 {
-  "name": "qbittorret-ui",
-  "private": true,
-  "version": "0.0.0",
+  "name": "qbt-ui",
+  "version": "1.1.0",
+  "description": "Modern keyboard-first replacement Web UI for qBittorrent",
+  "license": "MIT",
   "type": "module",
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "keywords": [
+    "qbittorrent",
+    "webui",
+    "torrent",
+    "react",
+    "vite",
+    "tailwind"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
@@ -25,6 +37,7 @@
     "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.59.1",
     "@tailwindcss/vite": "^4.2.4",
+    "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.1",
@@ -44,6 +57,7 @@
     "typescript": "~6.0.2",
     "typescript-eslint": "^8.58.2",
     "vite": "^8.0.10",
+    "vite-plugin-pwa": "^1.2.0",
     "vitest": "^4.1.5"
   }
 }
