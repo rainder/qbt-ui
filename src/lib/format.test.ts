@@ -11,7 +11,8 @@ describe('formatBytes', () => {
 });
 
 describe('formatSpeed', () => {
-  it('appends /s', () => expect(formatSpeed(1024)).toBe('1.0 KB/s'));
+  it('shows MB/s', () => expect(formatSpeed(5_242_880)).toBe('5.00 MB/s'));
+  it('shows MB/s for sub-MB values', () => expect(formatSpeed(1024)).toBe('0.00 MB/s'));
   it('shows dash when zero', () => expect(formatSpeed(0)).toBe('—'));
 });
 

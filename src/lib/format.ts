@@ -9,7 +9,7 @@ export function formatBytes(bytes: number): string {
 
 export function formatSpeed(bytesPerSec: number): string {
   if (bytesPerSec <= 0) return '—';
-  return `${formatBytes(bytesPerSec)}/s`;
+  return `${(bytesPerSec / 1_048_576).toFixed(2)} MB/s`;
 }
 
 export function formatEta(seconds: number): string {
