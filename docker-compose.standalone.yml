@@ -1,0 +1,30 @@
+# qbt-ui standalone — points at an existing qBittorrent.
+#
+# Use this instead of docker-compose.yml when you already have qBittorrent
+# running somewhere (LAN, host, another stack).
+#
+# Quick start:
+#   cp .env.example .env       # set QBT_BACKEND to your qBittorrent URL
+#   docker compose -f docker-compose.standalone.yml up -d
+#   open http://localhost:${WEB_PORT:-8080}
+
+services:
+  qbt-ui:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: qbt-ui
+    environment:
+      - WEB_PORT=80
+      # Point this at YOUR qBittorrent. Examples:
+      #   http://192.168.1.2:8080          (LAN)
+      #   http://host.docker.internal:8080 (qB on the same host)
+      #   http://qb.example.com            (DNS)
+      - QBT_BACKEND=${QBT_BACKEND:-http://host.docker.internal:8080}
+    ports:
+      - "${WEB_PORT:-8080}:80"
+    extra_hosts:
+      # Lets host.docker.internal resolve on Linux too (already works on
+      # macOS / Windows). Harmless if you don't use it.
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped

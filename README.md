@@ -36,23 +36,25 @@ open http://localhost:8080  # or whatever WEB_PORT you set
 
 First-time qBittorrent login is `admin / adminadmin` until you change it in Settings → Web UI inside qBittorrent. Persistent state lives under `./data/` by default.
 
-If you'd rather point qbt-ui at an **existing** qBittorrent instance:
+If you **already have qBittorrent running**, use the standalone compose file (no qBittorrent service, just the UI):
 
-```yaml
-# docker-compose.override.yml
-services:
-  qbittorrent: !reset null
-  qbt-ui:
-    depends_on: !reset []
-    environment:
-      QBT_BACKEND: http://192.168.1.2:8080
+```bash
+cp .env.example .env
+# edit .env — set QBT_BACKEND to your qBittorrent URL
+docker compose -f docker-compose.standalone.yml up -d
 ```
 
-…or skip compose entirely and just run the image:
+`QBT_BACKEND` examples:
+- `http://192.168.1.2:8080` — qBittorrent on another machine on your LAN
+- `http://host.docker.internal:8080` — qBittorrent on the same host (Linux/macOS/Windows)
+- `http://qbittorrent.lan:8080` — DNS-resolvable hostname
+
+Or skip compose entirely and just run the image:
 
 ```bash
 docker run --rm -p 8080:80 \
   -e QBT_BACKEND=http://192.168.1.2:8080 \
+  --add-host=host.docker.internal:host-gateway \
   ghcr.io/<you>/qbt-ui:latest
 ```
 
