@@ -2,9 +2,8 @@ import { useState } from 'react';
 import { Modal, useCloseModal } from './Modal';
 import { setCategory } from '@/api/torrents';
 import { useSelection } from '@/stores/selection';
-
-const inputCls =
-  'block w-full bg-canvas-inset border border-border-default rounded-md px-3 py-[5px] text-sm text-fg-default focus-accent';
+import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
 
 export function SetCategory({ categories, currentCategory }: {
   categories: string[];
@@ -32,13 +31,13 @@ export function SetCategory({ categories, currentCategory }: {
       <div className="space-y-4 w-72">
         <div>
           <label className="block text-sm font-medium text-fg-default mb-1">Category</label>
-          <input
+          <Input
             list="cats"
+            fullWidth
             value={value}
             onChange={(e) => setValue(e.target.value)}
             placeholder={mixed ? '— mixed —' : 'No category'}
             autoFocus
-            className={inputCls}
           />
           <datalist id="cats">
             {categories.map((c) => <option key={c} value={c} />)}
@@ -50,19 +49,8 @@ export function SetCategory({ categories, currentCategory }: {
           )}
         </div>
         <div className="flex justify-end gap-2 pt-2">
-          <button
-            onClick={close}
-            className="bg-canvas-subtle hover:bg-border-default text-fg-default border border-border-default rounded-md px-3 py-[5px] text-sm font-medium"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={submit}
-            disabled={busy}
-            className="bg-success-emphasis hover:bg-success-emphasis-h text-fg-on-emphasis border border-subtle rounded-md px-3 py-[5px] text-sm font-medium disabled:opacity-50"
-          >
-            Apply
-          </button>
+          <Button variant="default" onClick={close}>Cancel</Button>
+          <Button variant="primary" disabled={busy} onClick={submit}>Apply</Button>
         </div>
       </div>
     </Modal>

@@ -6,9 +6,8 @@ import {
   setDownloadLimit,
   setUploadLimit,
 } from '@/api/torrents';
-
-const inputCls =
-  'bg-canvas-inset border border-border-default rounded-md px-3 py-[5px] text-sm text-fg-default focus-accent w-32';
+import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
 
 /** Returns the shared value in KB/s if all hashes have the same limit, else `null` (mixed). */
 function sharedKbps(limits: Record<string, number>, hashes: string[]): number | null {
@@ -96,14 +95,14 @@ export function SetRateLimits({ hashes }: { hashes: string[] }) {
             <div className="flex items-center gap-3">
               <label className="w-32 text-sm font-medium text-fg-default">Download</label>
               <div className="flex items-center gap-2">
-                <input
+                <Input
                   type="number"
                   min={0}
                   step={1}
                   value={dlValue}
                   onChange={(e) => setDlValue(e.target.value)}
                   placeholder={dlMixed ? '(mixed)' : '0 = unlimited'}
-                  className={inputCls}
+                  className="w-32"
                   autoFocus
                 />
                 <span className="text-fg-muted text-sm">KB/s</span>
@@ -112,14 +111,14 @@ export function SetRateLimits({ hashes }: { hashes: string[] }) {
             <div className="flex items-center gap-3">
               <label className="w-32 text-sm font-medium text-fg-default">Upload</label>
               <div className="flex items-center gap-2">
-                <input
+                <Input
                   type="number"
                   min={0}
                   step={1}
                   value={upValue}
                   onChange={(e) => setUpValue(e.target.value)}
                   placeholder={upMixed ? '(mixed)' : '0 = unlimited'}
-                  className={inputCls}
+                  className="w-32"
                 />
                 <span className="text-fg-muted text-sm">KB/s</span>
               </div>
@@ -133,19 +132,10 @@ export function SetRateLimits({ hashes }: { hashes: string[] }) {
           </>
         )}
         <div className="flex justify-end gap-2 pt-2">
-          <button
-            onClick={close}
-            className="bg-canvas-subtle hover:bg-border-default text-fg-default border border-border-default rounded-md px-3 py-[5px] text-sm font-medium"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={() => { void apply(); }}
-            disabled={busy || loading}
-            className="bg-success-emphasis hover:bg-success-emphasis-h text-fg-on-emphasis border border-subtle rounded-md px-3 py-[5px] text-sm font-medium disabled:opacity-50"
-          >
+          <Button variant="default" onClick={close}>Cancel</Button>
+          <Button variant="primary" disabled={busy || loading} onClick={() => { void apply(); }}>
             Apply
-          </button>
+          </Button>
         </div>
       </div>
     </Modal>

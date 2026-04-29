@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { Kbd } from '@/components/ui/Kbd';
 
 export interface ContextMenuItem {
   label: string;
@@ -62,9 +63,7 @@ export function ContextMenu({
             ].join(' ')}
           >
             <span>{it.label}</span>
-            {it.shortcut && (
-              <kbd className="text-fg-muted font-mono text-xs">{it.shortcut}</kbd>
-            )}
+            {it.shortcut && <Kbd>{it.shortcut}</Kbd>}
           </button>
         </div>
       ))}

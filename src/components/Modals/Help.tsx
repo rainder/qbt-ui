@@ -1,5 +1,6 @@
 import { Modal, useCloseModal } from './Modal';
 import { registry } from '@/keyboard/bindings';
+import { Kbd } from '@/components/ui/Kbd';
 
 export function Help() {
   const close = useCloseModal();
@@ -20,9 +21,7 @@ export function Help() {
                 key={it.keys + it.label}
                 className="flex items-center justify-between border-b border-border-muted py-2"
               >
-                <kbd className="bg-canvas-subtle border border-border-default rounded px-1.5 py-0.5 text-xs font-mono text-fg-muted">
-                  {it.keys}
-                </kbd>
+                <Kbd>{it.keys}</Kbd>
                 <span className="text-fg-muted text-sm">{it.label}</span>
               </div>
             ))}

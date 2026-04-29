@@ -6,6 +6,9 @@ import { useUi } from '@/stores/ui';
 import { formatBytes, formatSpeed, formatRatio } from '@/lib/format';
 import { toggleSpeedLimitsMode } from '@/api/transfer';
 import { SpeedSparkline } from './SpeedSparkline';
+import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
+import { Kbd } from '@/components/ui/Kbd';
 
 export function TopBar({ serverState }: { serverState?: ServerState }) {
   const stats = useStats(serverState);
@@ -75,11 +78,11 @@ export function TopBar({ serverState }: { serverState?: ServerState }) {
       </button>
 
       {/* Filter input */}
-      <input
+      <Input
         value={filterText}
         onChange={(e) => setFilterText(e.target.value)}
         placeholder="Filter…"
-        className="bg-canvas-inset border border-border-default rounded-md px-3 py-1 text-sm w-56 placeholder:text-fg-subtle focus-accent"
+        className="w-56"
       />
 
       {/* Nav links */}
@@ -94,29 +97,22 @@ export function TopBar({ serverState }: { serverState?: ServerState }) {
       </Link>
 
       {/* Add button */}
-      <button
-        onClick={() => openModal('add')}
-        className="bg-success-emphasis hover:bg-success-emphasis-h text-fg-on-emphasis border border-subtle rounded-md px-3 py-[5px] text-sm font-medium"
-      >
+      <Button variant="primary" onClick={() => openModal('add')}>
         + Add
-      </button>
+      </Button>
 
       {/* Log */}
-      <button
-        onClick={() => openModal('log')}
-        className="text-fg-muted hover:text-fg-default text-xs px-2 py-1"
-        title="View log"
-      >
+      <Button variant="ghost" density="sm" onClick={() => openModal('log')} title="View log">
         Log
-      </button>
+      </Button>
 
       {/* Help */}
       <button
         onClick={() => openModal('help')}
-        className="bg-canvas-subtle border border-border-default rounded px-1.5 py-0.5 text-xs font-mono text-fg-muted hover:text-fg-default"
         title="Keyboard shortcuts (?)"
+        className="whitespace-nowrap"
       >
-        ?
+        <Kbd>?</Kbd>
       </button>
     </div>
   );

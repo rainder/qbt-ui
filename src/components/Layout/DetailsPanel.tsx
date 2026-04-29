@@ -6,6 +6,7 @@ import { PeersTab } from '@/components/Details/PeersTab';
 import { TrackersTab } from '@/components/Details/TrackersTab';
 import { useUi } from '@/stores/ui';
 import clsx from 'clsx';
+import { Kbd } from '@/components/ui/Kbd';
 
 type Tab = 'general' | 'files' | 'peers' | 'trackers';
 const TABS: Tab[] = ['general', 'files', 'peers', 'trackers'];
@@ -33,9 +34,7 @@ export function DetailsPanel({ torrent }: { torrent: Partial<Torrent> }) {
         ))}
         <div className="flex-1" />
         <button onClick={close} className="text-fg-muted hover:text-fg-default">
-          <kbd className="bg-canvas border border-border-default rounded px-1.5 py-0.5 text-xs font-mono text-fg-muted">
-            esc
-          </kbd>
+          <Kbd>esc</Kbd>
         </button>
       </div>
       {/* Body */}

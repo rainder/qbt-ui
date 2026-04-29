@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import type { SearchResult } from '@/api/types';
 import { formatBytes } from '@/lib/format';
+import { Button } from '@/components/ui/Button';
 
 type SortKey = 'fileName' | 'fileSize' | 'nbSeeders' | 'nbLeechers' | 'siteUrl';
 type SortDir = 'asc' | 'desc';
@@ -85,12 +86,14 @@ export function ResultsTable({
               </a>
             </td>
             <td className="text-right pr-3">
-              <button
+              <Button
+                variant="ghost"
+                density="sm"
+                className="text-accent-fg hover:bg-accent-subtle"
                 onClick={() => onAdd(r.fileUrl)}
-                className="bg-canvas-subtle hover:bg-accent-subtle text-accent-fg border border-border-default rounded-md px-2 py-1 text-xs"
               >
                 + Add
-              </button>
+              </Button>
             </td>
           </tr>
         ))}

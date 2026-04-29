@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Modal, useCloseModal } from './Modal';
 import { remove } from '@/api/torrents';
 import { useSelection } from '@/stores/selection';
+import { Button } from '@/components/ui/Button';
 
 export function ConfirmDelete() {
   const close = useCloseModal();
@@ -35,19 +36,10 @@ export function ConfirmDelete() {
           Also delete files on disk
         </label>
         <div className="flex justify-end gap-2 pt-2">
-          <button
-            onClick={close}
-            className="bg-canvas-subtle hover:bg-border-default text-fg-default border border-border-default rounded-md px-3 py-[5px] text-sm font-medium"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={submit}
-            disabled={busy}
-            className="bg-canvas-subtle hover:bg-danger-emphasis hover:text-fg-on-emphasis text-danger-fg border border-border-default hover:border-danger-emphasis rounded-md px-3 py-[5px] text-sm font-medium disabled:opacity-50"
-          >
+          <Button variant="default" onClick={close}>Cancel</Button>
+          <Button variant="danger" disabled={busy} onClick={submit}>
             {busy ? '…' : 'Delete'}
-          </button>
+          </Button>
         </div>
       </div>
     </Modal>

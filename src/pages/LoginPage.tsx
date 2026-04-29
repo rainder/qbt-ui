@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { login } from '@/api/auth';
-
-const inputCls =
-  'block w-full bg-canvas-inset border border-border-default rounded-md px-3 py-[5px] text-sm text-fg-default focus-accent';
+import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
 
 export default function LoginPage() {
   const [username, setUsername] = useState('admin');
@@ -46,8 +45,8 @@ export default function LoginPage() {
 
           <div>
             <label className="block text-sm font-medium text-fg-default mb-1">Username</label>
-            <input
-              className={inputCls}
+            <Input
+              fullWidth
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               autoFocus
@@ -57,9 +56,9 @@ export default function LoginPage() {
 
           <div>
             <label className="block text-sm font-medium text-fg-default mb-1">Password</label>
-            <input
+            <Input
               type="password"
-              className={inputCls}
+              fullWidth
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -68,13 +67,9 @@ export default function LoginPage() {
 
           {error && <div className="text-danger-fg text-sm">{error}</div>}
 
-          <button
-            type="submit"
-            disabled={busy}
-            className="w-full bg-success-emphasis hover:bg-success-emphasis-h text-fg-on-emphasis border border-subtle rounded-md px-3 py-[5px] text-sm font-medium disabled:opacity-50"
-          >
+          <Button type="submit" variant="primary" fullWidth disabled={busy}>
             {busy ? '…' : 'Connect'}
-          </button>
+          </Button>
         </form>
       </div>
     </div>

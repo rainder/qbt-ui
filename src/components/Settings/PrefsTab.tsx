@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { fetchPrefs, setPrefs } from '@/api/prefs';
 import type { Preferences } from '@/api/types';
+import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
 
 export interface FieldDef {
   key: string;
@@ -9,9 +11,6 @@ export interface FieldDef {
   unit?: string;
   divisor?: number;
 }
-
-const inputCls =
-  'bg-canvas-inset border border-border-default rounded-md px-3 py-[5px] text-sm text-fg-default focus-accent w-48';
 
 export function PrefsTab({ fields }: { fields: FieldDef[] }) {
   const [prefs, setLocal] = useState<Preferences | null>(null);
@@ -62,7 +61,7 @@ export function PrefsTab({ fields }: { fields: FieldDef[] }) {
         return (
           <div key={f.key} className="flex items-center gap-4">
             <label className="w-64 text-sm font-medium text-fg-default">{f.label}</label>
-            <input
+            <Input
               type={f.type === 'number' ? 'number' : 'text'}
               value={String(display ?? '')}
               onChange={(e) => {
@@ -73,7 +72,7 @@ export function PrefsTab({ fields }: { fields: FieldDef[] }) {
                 }
                 update(f.key, next);
               }}
-              className={inputCls}
+              className="w-48"
             />
             {f.unit && <span className="text-fg-muted text-sm">{f.unit}</span>}
           </div>
@@ -81,20 +80,20 @@ export function PrefsTab({ fields }: { fields: FieldDef[] }) {
       })}
       {err && <div className="text-danger-fg text-sm">{err}</div>}
       <div className="flex gap-2 pt-4 border-t border-border-default">
-        <button
-          onClick={save}
+        <Button
+          variant="primary"
           disabled={busy || Object.keys(dirty).length === 0}
-          className="bg-success-emphasis hover:bg-success-emphasis-h text-fg-on-emphasis border border-subtle rounded-md px-3 py-[5px] text-sm font-medium disabled:opacity-50"
+          onClick={save}
         >
           {busy ? '…' : 'Save'}
-        </button>
-        <button
-          onClick={() => setDirty({})}
+        </Button>
+        <Button
+          variant="default"
           disabled={Object.keys(dirty).length === 0}
-          className="bg-canvas-subtle hover:bg-border-default text-fg-default border border-border-default rounded-md px-3 py-[5px] text-sm font-medium disabled:opacity-50"
+          onClick={() => setDirty({})}
         >
           Revert
-        </button>
+        </Button>
       </div>
     </div>
   );

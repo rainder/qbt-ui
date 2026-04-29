@@ -4,6 +4,8 @@ import { fetchFiles, setFilePriority, renameFile, FilePriority, type FilePriorit
 import { formatBytes } from '@/lib/format';
 import { ProgressBar } from '@/components/List/ProgressBar';
 import { Select } from '@/components/ui/Select';
+import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
 
 const PRIORITY_OPTIONS: { value: FilePriorityValue; label: string }[] = [
   { value: FilePriority.Skip,    label: 'Skip' },
@@ -13,9 +15,6 @@ const PRIORITY_OPTIONS: { value: FilePriorityValue; label: string }[] = [
 ];
 
 const KNOWN_PRIORITIES = new Set<number>(PRIORITY_OPTIONS.map((p) => p.value));
-
-const inputCls =
-  'bg-canvas-inset border border-border-default rounded-md px-2 py-0.5 text-sm focus-accent w-full outline-none';
 
 export function FilesTab({ hash }: { hash: string }) {
   const qc = useQueryClient();
@@ -86,8 +85,9 @@ export function FilesTab({ hash }: { hash: string }) {
             <tr key={f.index} className="border-b border-border-muted hover:bg-canvas-subtle text-sm">
               <td className="py-2 px-3 truncate text-fg-default">
                 {isEditing ? (
-                  <input
-                    className={inputCls}
+                  <Input
+                    density="sm"
+                    fullWidth
                     autoFocus
                     value={editingValue}
                     onChange={(e) => setEditingValue(e.target.value)}
@@ -119,12 +119,13 @@ export function FilesTab({ hash }: { hash: string }) {
               </td>
               <td className="px-3 text-right">
                 {!isEditing && (
-                  <button
-                    className="bg-canvas-subtle hover:bg-border-default text-fg-default border border-border-default rounded-md px-2 py-0.5 text-xs font-medium"
+                  <Button
+                    variant="default"
+                    density="sm"
                     onClick={() => startEdit(f.index, f.name)}
                   >
                     Rename
-                  </button>
+                  </Button>
                 )}
               </td>
             </tr>

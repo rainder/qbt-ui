@@ -1,32 +1,31 @@
 import type { TorrentState } from '@/api/types';
+import { Badge, type BadgeProps } from '@/components/ui/Badge';
 
-const MAP: Record<TorrentState, { label: string; cls: string }> = {
-  downloading:        { label: 'Down',  cls: 'bg-accent-subtle text-accent-fg border-accent-muted' },
-  forcedDL:           { label: 'Down',  cls: 'bg-accent-subtle text-accent-fg border-accent-muted' },
-  metaDL:             { label: 'Down',  cls: 'bg-accent-subtle text-accent-fg border-accent-muted' },
-  stalledDL:          { label: 'Down',  cls: 'bg-accent-subtle text-accent-fg border-accent-muted' },
-  queuedDL:           { label: 'Queue', cls: 'bg-accent-subtle text-accent-fg border-accent-muted' },
-  checkingDL:         { label: 'Check', cls: 'bg-accent-subtle text-accent-fg border-accent-muted' },
-  uploading:          { label: 'Seed',  cls: 'bg-success-subtle text-success-fg border-success-muted' },
-  forcedUP:           { label: 'Seed',  cls: 'bg-success-subtle text-success-fg border-success-muted' },
-  stalledUP:          { label: 'Seed',  cls: 'bg-canvas-subtle text-fg-muted border-border-default' },
-  queuedUP:           { label: 'Queue', cls: 'bg-canvas-subtle text-fg-muted border-border-default' },
-  checkingUP:         { label: 'Check', cls: 'bg-attention-subtle text-attention-fg border-attention-muted' },
-  pausedDL:           { label: 'Pause', cls: 'bg-canvas-subtle text-fg-muted border-border-default' },
-  pausedUP:           { label: 'Pause', cls: 'bg-canvas-subtle text-fg-muted border-border-default' },
-  allocating:         { label: 'Alloc', cls: 'bg-attention-subtle text-attention-fg border-attention-muted' },
-  moving:             { label: 'Move',  cls: 'bg-attention-subtle text-attention-fg border-attention-muted' },
-  checkingResumeData: { label: 'Check', cls: 'bg-attention-subtle text-attention-fg border-attention-muted' },
-  missingFiles:       { label: 'Miss',  cls: 'bg-danger-subtle text-danger-fg border-danger-muted' },
-  error:              { label: 'Error', cls: 'bg-danger-subtle text-danger-fg border-danger-muted' },
-  unknown:            { label: '—',     cls: 'bg-canvas-subtle text-fg-muted border-border-default' },
+type BadgeVariant = BadgeProps['variant'];
+
+const MAP: Record<TorrentState, { label: string; variant: BadgeVariant }> = {
+  downloading:        { label: 'Down',  variant: 'accent' },
+  forcedDL:           { label: 'Down',  variant: 'accent' },
+  metaDL:             { label: 'Down',  variant: 'accent' },
+  stalledDL:          { label: 'Down',  variant: 'neutral' },
+  queuedDL:           { label: 'Queue', variant: 'neutral' },
+  checkingDL:         { label: 'Check', variant: 'attention' },
+  uploading:          { label: 'Seed',  variant: 'success' },
+  forcedUP:           { label: 'Seed',  variant: 'success' },
+  stalledUP:          { label: 'Seed',  variant: 'neutral' },
+  queuedUP:           { label: 'Queue', variant: 'neutral' },
+  checkingUP:         { label: 'Check', variant: 'attention' },
+  pausedDL:           { label: 'Pause', variant: 'neutral' },
+  pausedUP:           { label: 'Pause', variant: 'neutral' },
+  allocating:         { label: 'Alloc', variant: 'attention' },
+  moving:             { label: 'Move',  variant: 'attention' },
+  checkingResumeData: { label: 'Check', variant: 'attention' },
+  missingFiles:       { label: 'Miss',  variant: 'danger' },
+  error:              { label: 'Error', variant: 'danger' },
+  unknown:            { label: '—',     variant: 'neutral' },
 };
 
 export function StatusPill({ state }: { state: TorrentState }) {
-  const { label, cls } = MAP[state] ?? MAP.unknown;
-  return (
-    <span className={`inline-flex items-center px-2 py-0.5 text-xs font-medium rounded-full border ${cls}`}>
-      {label}
-    </span>
-  );
+  const { label, variant } = MAP[state] ?? MAP.unknown;
+  return <Badge variant={variant} shape="pill">{label}</Badge>;
 }

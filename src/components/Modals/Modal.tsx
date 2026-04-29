@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useUi } from '@/stores/ui';
+import { Kbd } from '@/components/ui/Kbd';
 
 export function Modal({ title, children, onClose }: {
   title: string; children: React.ReactNode; onClose: () => void;
@@ -26,9 +27,7 @@ export function Modal({ title, children, onClose }: {
         <div className="h-12 px-4 border-b border-border-default flex items-center justify-between">
           <span className="text-base font-semibold text-fg-default">{title}</span>
           <button onClick={onClose} className="hover:text-fg-default text-fg-muted">
-            <kbd className="bg-canvas-subtle border border-border-default rounded px-1.5 py-0.5 text-xs font-mono text-fg-muted">
-              esc
-            </kbd>
+            <Kbd>esc</Kbd>
           </button>
         </div>
         {/* Body */}

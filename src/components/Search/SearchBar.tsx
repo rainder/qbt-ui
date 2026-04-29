@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { fetchPlugins } from '@/api/search';
 import type { SearchPlugin } from '@/api/types';
 import { Select } from '@/components/ui/Select';
+import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
 
 export function SearchBar({ onStart }: {
   onStart: (pattern: string, plugins: 'enabled' | string[], category: string) => void;
@@ -21,12 +23,12 @@ export function SearchBar({ onStart }: {
       }}
       className="flex gap-2 p-4 border-b border-border-default items-center bg-canvas-subtle"
     >
-      <input
+      <Input
         autoFocus
         placeholder="Search torrents…"
         value={pattern}
         onChange={(e) => setPattern(e.target.value)}
-        className="flex-1 bg-canvas-inset border border-border-default rounded-md px-3 py-[5px] text-base text-fg-default placeholder:text-fg-subtle focus-accent"
+        className="flex-1 text-base"
       />
       <Select value={category} onChange={(e) => setCategory(e.target.value)}>
         <option value="all">All categories</option>
@@ -45,12 +47,7 @@ export function SearchBar({ onStart }: {
           <option key={p.name} value={p.name}>{p.fullName}</option>
         ))}
       </Select>
-      <button
-        type="submit"
-        className="bg-success-emphasis hover:bg-success-emphasis-h text-fg-on-emphasis border border-subtle rounded-md px-3 py-[5px] text-sm font-medium"
-      >
-        Search
-      </button>
+      <Button type="submit" variant="primary">Search</Button>
     </form>
   );
 }

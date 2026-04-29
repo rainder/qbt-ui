@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { Modal, useCloseModal } from './Modal';
 import { addTorrent } from '@/api/torrents';
 import { Select } from '@/components/ui/Select';
-
-const inputCls =
-  'block w-full bg-canvas-inset border border-border-default rounded-md px-3 py-[5px] text-sm text-fg-default focus-accent';
+import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
+import { Textarea } from '@/components/ui/Textarea';
 
 export function AddTorrent({ initialUrl = '', initialFiles, categories, onClose }: {
   initialUrl?: string;
@@ -49,8 +49,9 @@ export function AddTorrent({ initialUrl = '', initialFiles, categories, onClose 
           <label className="block text-sm font-medium text-fg-default mb-1">
             URLs / Magnets <span className="text-fg-muted font-normal">(one per line)</span>
           </label>
-          <textarea
-            className={`${inputCls} h-24`}
+          <Textarea
+            fullWidth
+            className="h-24"
             value={urls}
             onChange={(e) => setUrls(e.target.value)}
             placeholder="magnet:?xt=urn:btih:..."
@@ -82,8 +83,8 @@ export function AddTorrent({ initialUrl = '', initialFiles, categories, onClose 
           </div>
           <div>
             <label className="block text-sm font-medium text-fg-default mb-1">Tags (comma)</label>
-            <input
-              className={inputCls}
+            <Input
+              fullWidth
               value={tags}
               onChange={(e) => setTags(e.target.value)}
             />
@@ -102,20 +103,10 @@ export function AddTorrent({ initialUrl = '', initialFiles, categories, onClose 
         {err && <div className="text-danger-fg text-sm">{err}</div>}
 
         <div className="flex justify-end gap-2 pt-2">
-          <button
-            type="button"
-            onClick={close}
-            className="bg-canvas-subtle hover:bg-border-default text-fg-default border border-border-default rounded-md px-3 py-[5px] text-sm font-medium"
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            disabled={busy}
-            className="bg-success-emphasis hover:bg-success-emphasis-h text-fg-on-emphasis border border-subtle rounded-md px-3 py-[5px] text-sm font-medium disabled:opacity-50"
-          >
+          <Button variant="default" onClick={close}>Cancel</Button>
+          <Button type="submit" variant="primary" disabled={busy}>
             {busy ? '…' : 'Add'}
-          </button>
+          </Button>
         </div>
       </form>
     </Modal>

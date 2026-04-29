@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { fetchPlugins, installPlugin, uninstallPlugin, enablePlugin, updatePlugins } from '@/api/search';
+import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
 
 export function PluginsTab() {
   const qc = useQueryClient();
@@ -35,26 +37,28 @@ export function PluginsTab() {
     <div className="space-y-4 max-w-3xl">
       {/* Install row */}
       <div className="flex gap-2 items-center">
-        <input
+        <Input
           placeholder="Install URL or local path (.py / .zip)"
           value={source}
           onChange={(e) => setSource(e.target.value)}
-          className="flex-1 bg-canvas-inset border border-border-default rounded-md px-3 py-[5px] text-sm text-fg-default focus-accent"
+          className="flex-1"
         />
-        <button
+        <Button
+          density="sm"
+          variant="primary"
           disabled={!source.trim() || install.isPending}
           onClick={() => install.mutate()}
-          className="bg-success-emphasis hover:bg-success-emphasis-h text-fg-on-emphasis border border-subtle rounded-md px-3 py-[5px] text-sm font-medium disabled:opacity-50"
         >
           Install
-        </button>
-        <button
+        </Button>
+        <Button
+          density="sm"
+          variant="default"
           onClick={() => update.mutate()}
           disabled={update.isPending}
-          className="bg-canvas-subtle hover:bg-border-default text-fg-default border border-border-default rounded-md px-3 py-[5px] text-sm font-medium disabled:opacity-50"
         >
           Update all
-        </button>
+        </Button>
       </div>
       {err && <div className="text-danger-fg text-sm">{err}</div>}
 
@@ -83,12 +87,13 @@ export function PluginsTab() {
                 />
               </td>
               <td className="text-right px-3">
-                <button
+                <Button
+                  density="sm"
+                  variant="danger"
                   onClick={() => uninstall(p.name)}
-                  className="bg-canvas-subtle hover:bg-danger-emphasis hover:text-fg-on-emphasis text-danger-fg border border-border-default hover:border-danger-emphasis rounded-md px-2 py-1 text-xs font-medium"
                 >
                   Uninstall
-                </button>
+                </Button>
               </td>
             </tr>
           ))}

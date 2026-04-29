@@ -3,6 +3,7 @@ import type { Torrent } from '@/api/types';
 import { useUi, type StatusFilter } from '@/stores/ui';
 import clsx from 'clsx';
 import { filterTorrents } from '@/lib/listOps';
+import { Badge } from '@/components/ui/Badge';
 
 const STATUSES: { key: StatusFilter; label: string }[] = [
   { key: 'all',         label: 'All' },
@@ -107,16 +108,13 @@ function Row({
     >
       <span className="truncate">{children}</span>
       {count !== undefined && (
-        <span
-          className={clsx(
-            'shrink-0 inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full text-xs font-medium tabular-nums',
-            active
-              ? 'bg-accent-fg text-fg-on-emphasis'
-              : 'bg-canvas-subtle text-fg-muted',
-          )}
+        <Badge
+          variant={active ? 'solid-accent' : 'neutral'}
+          shape="pill"
+          className="shrink-0 min-w-[20px] justify-center tabular-nums"
         >
           {count}
-        </span>
+        </Badge>
       )}
     </button>
   );

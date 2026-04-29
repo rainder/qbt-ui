@@ -1,13 +1,12 @@
 import { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { fetchTrackers, reannounce, addTrackers, removeTrackers, editTracker } from '@/api/torrents';
+import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
 
 const STATUS: Record<number, string> = {
   0: 'disabled', 1: 'not contacted', 2: 'working', 3: 'updating', 4: 'not working',
 };
-
-const inputCls =
-  'bg-canvas-inset border border-border-default rounded-md px-2 py-0.5 text-sm focus-accent w-full outline-none';
 
 export function TrackersTab({ hash }: { hash: string }) {
   const qc = useQueryClient();
@@ -63,26 +62,24 @@ export function TrackersTab({ hash }: { hash: string }) {
     <div>
       {/* Add tracker form */}
       <form onSubmit={(e) => void handleAdd(e)} className="flex gap-2 mb-3">
-        <input
-          className={`${inputCls} flex-1`}
+        <Input
+          density="sm"
+          className="flex-1"
           placeholder="Add tracker URL…"
           value={addUrl}
           onChange={(e) => setAddUrl(e.target.value)}
         />
-        <button
-          type="submit"
-          className="bg-success-emphasis hover:bg-success-emphasis-h text-fg-on-emphasis border border-subtle rounded-md px-3 py-1 text-xs font-medium"
-        >
-          Add
-        </button>
+        <Button type="submit" variant="primary" density="sm">Add</Button>
       </form>
 
-      <button
+      <Button
+        variant="default"
+        density="sm"
+        className="mb-3"
         onClick={() => reannounce([hash])}
-        className="mb-3 bg-canvas-subtle hover:bg-border-default text-fg-default border border-border-default rounded-md px-3 py-1 text-xs font-medium"
       >
         Reannounce
-      </button>
+      </Button>
 
       <table className="w-full">
         <thead>
@@ -104,8 +101,9 @@ export function TrackersTab({ hash }: { hash: string }) {
               <tr key={i} className="border-b border-border-muted hover:bg-canvas-subtle text-sm">
                 <td className="py-2 px-3 truncate text-fg-default max-w-md">
                   {isEditing ? (
-                    <input
-                      className={inputCls}
+                    <Input
+                      density="sm"
+                      fullWidth
                       autoFocus
                       value={editingValue}
                       onChange={(e) => setEditingValue(e.target.value)}
@@ -127,18 +125,20 @@ export function TrackersTab({ hash }: { hash: string }) {
                 <td className="px-3">
                   {!isBuiltIn && !isEditing && (
                     <div className="flex gap-1 justify-end">
-                      <button
-                        className="bg-canvas-subtle hover:bg-border-default text-fg-default border border-border-default rounded-md px-2 py-0.5 text-xs font-medium"
+                      <Button
+                        variant="default"
+                        density="sm"
                         onClick={() => startEdit(t.url)}
                       >
                         Edit
-                      </button>
-                      <button
-                        className="bg-canvas-subtle hover:bg-danger-emphasis hover:text-fg-on-emphasis text-danger-fg border border-border-default hover:border-danger-emphasis rounded-md px-2 py-0.5 text-xs font-medium"
+                      </Button>
+                      <Button
+                        variant="danger"
+                        density="sm"
                         onClick={() => void handleRemove(t.url)}
                       >
                         Remove
-                      </button>
+                      </Button>
                     </div>
                   )}
                 </td>
