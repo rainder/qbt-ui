@@ -158,7 +158,9 @@ export default function TorrentListPage() {
       )}
       <TopBar serverState={state.serverState} />
       <div className="flex-1 min-h-0 flex">
-        <Sidebar torrents={state.torrents} categories={state.categories} tags={state.tags} />
+        {!ui.sidebarCollapsed && (
+          <Sidebar torrents={state.torrents} categories={state.categories} tags={state.tags} />
+        )}
         <div className="flex-1 min-w-0 flex flex-col">
           <div className="flex-1 min-h-0">
             <TorrentTable rows={displayedRows} />

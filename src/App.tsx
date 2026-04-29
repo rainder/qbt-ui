@@ -18,18 +18,19 @@ function CompletionWatcher() {
 }
 
 function GlobalKeybinds() {
-  const { activeModal, openModal } = useUi();
+  const { activeModal, openModal, toggleSidebar } = useUi();
   const navigate = useNavigate();
   useKeyboardHandler(() => (activeModal ? 'modal' : 'list'));
   useKeybinds([
-    { context: 'global', keys: '?',  label: 'help',        action: () => openModal('help') },
-    { context: 'global', keys: 'a',  label: 'add torrent', action: () => openModal('add') },
-    { context: 'global', keys: 'gs', label: 'go search',   action: () => navigate('/search') },
-    { context: 'global', keys: 'gh', label: 'go home',     action: () => navigate('/') },
-    { context: 'global', keys: 'gp', label: 'go plugins',  action: () => navigate('/settings/plugins') },
-    { context: 'global', keys: 'gn', label: 'go settings', action: () => navigate('/settings') },
-    { context: 'global', keys: 'ga', label: 'alt rate',    action: () => toggleSpeedLimitsMode() },
-    { context: 'modal',  keys: 'esc', label: 'close',      action: () => openModal(null) },
+    { context: 'global', keys: '?',  label: 'help',           action: () => openModal('help') },
+    { context: 'global', keys: 'a',  label: 'add torrent',    action: () => openModal('add') },
+    { context: 'global', keys: '[',  label: 'toggle sidebar', action: () => toggleSidebar() },
+    { context: 'global', keys: 'gs', label: 'go search',      action: () => navigate('/search') },
+    { context: 'global', keys: 'gh', label: 'go home',        action: () => navigate('/') },
+    { context: 'global', keys: 'gp', label: 'go plugins',     action: () => navigate('/settings/plugins') },
+    { context: 'global', keys: 'gn', label: 'go settings',    action: () => navigate('/settings') },
+    { context: 'global', keys: 'ga', label: 'alt rate',       action: () => toggleSpeedLimitsMode() },
+    { context: 'modal',  keys: 'esc', label: 'close',         action: () => openModal(null) },
   ]);
   return null;
 }

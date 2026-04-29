@@ -15,6 +15,7 @@ interface UiState {
   detailsOpen: boolean;
   activeHash: string | null;
   activeModal: 'add' | 'delete' | 'category' | 'tags' | 'help' | 'location' | 'limits' | 'log' | null;
+  sidebarCollapsed: boolean;
 
   setStatus(s: StatusFilter): void;
   setCategory(c: string | null): void;
@@ -24,6 +25,7 @@ interface UiState {
   openDetails(hash: string): void;
   closeDetails(): void;
   openModal(m: UiState['activeModal']): void;
+  toggleSidebar(): void;
 }
 
 export const useUi = create<UiState>()(
@@ -38,6 +40,7 @@ export const useUi = create<UiState>()(
       detailsOpen: false,
       activeHash: null,
       activeModal: null,
+      sidebarCollapsed: false,
 
       setStatus(s) { set({ filterStatus: s }); },
       setCategory(c) { set({ filterCategory: c }); },
@@ -52,6 +55,7 @@ export const useUi = create<UiState>()(
       openDetails(hash) { set({ detailsOpen: true, activeHash: hash }); },
       closeDetails() { set({ detailsOpen: false }); },
       openModal(m) { set({ activeModal: m }); },
+      toggleSidebar() { set({ sidebarCollapsed: !get().sidebarCollapsed }); },
     }),
     {
       name: 'qbt-ui',
@@ -62,6 +66,7 @@ export const useUi = create<UiState>()(
         filterTag: state.filterTag,
         sortKey: state.sortKey,
         sortDir: state.sortDir,
+        sidebarCollapsed: state.sidebarCollapsed,
       }),
     },
   ),

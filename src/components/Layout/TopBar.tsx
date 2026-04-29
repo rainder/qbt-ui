@@ -24,8 +24,27 @@ export function TopBar({ serverState }: { serverState?: ServerState }) {
 
   const altRateActive = serverState?.use_alt_speed_limits ?? false;
 
+  const sidebarCollapsed = useUi((s) => s.sidebarCollapsed);
+  const toggleSidebar = useUi((s) => s.toggleSidebar);
+
   return (
-    <div className="h-14 bg-canvas border-b border-border-muted flex items-center px-4 gap-4 shrink-0">
+    <div className="h-14 bg-canvas border-b border-border-muted flex items-center px-3 gap-3 shrink-0">
+      {/* Sidebar toggle */}
+      <button
+        onClick={toggleSidebar}
+        title={sidebarCollapsed ? 'Show sidebar ([)' : 'Hide sidebar ([)'}
+        aria-label="Toggle sidebar"
+        className="shrink-0 inline-flex items-center justify-center w-8 h-8 rounded-md text-fg-muted hover:text-fg-default hover:bg-canvas-subtle transition-colors"
+      >
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="2" y="3" width="12" height="10" rx="1.5" />
+          <line x1="6" y1="3" x2="6" y2="13" />
+          {!sidebarCollapsed && <line x1="3.5" y1="6" x2="4.5" y2="6" />}
+          {!sidebarCollapsed && <line x1="3.5" y1="8" x2="4.5" y2="8" />}
+          {!sidebarCollapsed && <line x1="3.5" y1="10" x2="4.5" y2="10" />}
+        </svg>
+      </button>
+
       {/* Brand — clickable home link */}
       <Link
         to="/"
