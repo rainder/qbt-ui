@@ -22,19 +22,26 @@ export function AddTorrent({ initialUrl = '', initialFiles, categories, onClose 
   const [category, setCategory] = useState('');
   const [tags, setTags] = useState('');
   const [paused, setPaused] = useState(false);
+  const [sequential, setSequential] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
+    const trimmedUrls = urls.trim();
+    if (!trimmedUrls && files.length === 0) {
+      setErr('Enter a magnet/URL or choose a .torrent file.');
+      return;
+    }
     setBusy(true); setErr(null);
     try {
       await addTorrent({
-        urls: urls.trim() || undefined,
+        urls: trimmedUrls || undefined,
         files: files.length ? files : undefined,
         category: category || undefined,
         tags: tags || undefined,
         paused,
+        sequentialDownload: sequential,
       });
       close();
     } catch (x) {
@@ -91,14 +98,24 @@ export function AddTorrent({ initialUrl = '', initialFiles, categories, onClose 
           </div>
         </div>
 
-        <label className="flex items-center gap-2 text-fg-default text-sm">
-          <input
-            type="checkbox"
-            checked={paused}
-            onChange={(e) => setPaused(e.target.checked)}
-          />
-          Start paused
-        </label>
+        <div className="flex flex-col gap-1.5">
+          <label className="flex items-center gap-2 text-fg-default text-sm">
+            <input
+              type="checkbox"
+              checked={paused}
+              onChange={(e) => setPaused(e.target.checked)}
+            />
+            Start paused
+          </label>
+          <label className="flex items-center gap-2 text-fg-default text-sm">
+            <input
+              type="checkbox"
+              checked={sequential}
+              onChange={(e) => setSequential(e.target.checked)}
+            />
+            Sequential download
+          </label>
+        </div>
 
         {err && <div className="text-danger-fg text-sm">{err}</div>}
 

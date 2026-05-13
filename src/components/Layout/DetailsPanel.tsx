@@ -225,7 +225,7 @@ function ActionBtn({
 
 function TabBody({ tab, torrent }: { tab: Tab; torrent: Partial<Torrent> }) {
   if (tab === 'general') return <GeneralTab t={torrent} />;
-  if (tab === 'files' && torrent.hash) return <FilesTab hash={torrent.hash} />;
+  if (tab === 'files' && torrent.hash) return <FilesTab hash={torrent.hash} seqDl={torrent.seq_dl} />;
   if (tab === 'peers' && torrent.hash) return <PeersTab hash={torrent.hash} />;
   if (tab === 'trackers' && torrent.hash) return <TrackersTab hash={torrent.hash} />;
   return null;

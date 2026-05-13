@@ -70,7 +70,7 @@ export function SettingsLayout({ pluginsTab }: { pluginsTab: React.ReactNode }) 
           </>
         )}
         {/* Content */}
-        <div className="flex-1 overflow-auto p-6 max-w-3xl pb-safe">
+        <div className="flex-1 overflow-auto p-6 max-w-3xl pb-mobile-nav">
           <Routes>
             <Route index element={<Navigate to="general" replace />} />
             <Route path="general" element={<General />} />

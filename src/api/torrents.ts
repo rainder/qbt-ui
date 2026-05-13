@@ -122,6 +122,7 @@ export interface AddTorrentInput {
   tags?: string;
   savepath?: string;
   paused?: boolean;
+  sequentialDownload?: boolean;
 }
 
 export async function addTorrent(input: AddTorrentInput): Promise<void> {
@@ -132,5 +133,6 @@ export async function addTorrent(input: AddTorrentInput): Promise<void> {
   if (input.tags) fd.append('tags', input.tags);
   if (input.savepath) fd.append('savepath', input.savepath);
   if (input.paused !== undefined) fd.append('paused', String(input.paused));
+  if (input.sequentialDownload) fd.append('sequentialDownload', 'true');
   await apiPost('/torrents/add', fd);
 }

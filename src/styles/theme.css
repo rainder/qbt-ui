@@ -20,6 +20,18 @@ html, body, #root { height: 100%; }
   padding-bottom: env(safe-area-inset-bottom);
 }
 
+/* Add to a mobile scroll container that sits under the floating bottom
+   pill bar (MobileBottomBar). Includes safe-area inset + bar height + gap.
+   Desktop falls back to no extra padding (bar is hidden). */
+.pb-mobile-nav {
+  padding-bottom: calc(env(safe-area-inset-bottom) + 72px);
+}
+@media (min-width: 768px) {
+  .pb-mobile-nav {
+    padding-bottom: 0;
+  }
+}
+
 /* Companion to .pb-safe for the top inset — apply to fixed-position overlays
    (e.g. full-screen mobile views) whose `inset-0` bypasses #root's padding. */
 .pt-safe {

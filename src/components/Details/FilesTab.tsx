@@ -1,6 +1,9 @@
 import { useRef, useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { fetchFiles, setFilePriority, renameFile, FilePriority, type FilePriorityValue } from '@/api/torrents';
+import {
+  fetchFiles, setFilePriority, renameFile, toggleSequentialDownload,
+  FilePriority, type FilePriorityValue,
+} from '@/api/torrents';
 import { formatBytes } from '@/lib/format';
 import { ProgressBar } from '@/components/List/ProgressBar';
 import { Select } from '@/components/ui/Select';
@@ -17,7 +20,7 @@ const PRIORITY_OPTIONS: { value: FilePriorityValue; label: string }[] = [
 
 const KNOWN_PRIORITIES = new Set<number>(PRIORITY_OPTIONS.map((p) => p.value));
 
-export function FilesTab({ hash }: { hash: string }) {
+export function FilesTab({ hash, seqDl }: { hash: string; seqDl?: boolean }) {
   const qc = useQueryClient();
   const isMobile = useIsMobile();
   const q = useQuery({
@@ -63,12 +66,32 @@ export function FilesTab({ hash }: { hash: string }) {
     cancelEdit();
   }
 
-  if (q.isLoading) return <div className="text-fg-muted text-sm">Loading files…</div>;
-  if (q.error) return <div className="text-danger-fg text-sm">{(q.error as Error).message}</div>;
+  async function toggleSeq() {
+    await toggleSequentialDownload([hash]);
+    // The torrent's seq_dl state is owned by the global sync poll; it will
+    // refresh on the next tick. Files list itself doesn't change, but invalidate
+    // anyway in case priorities are affected by sequential mode.
+    qc.invalidateQueries({ queryKey: ['files', hash] });
+  }
+
+  const header = (
+    <label className="flex items-center gap-2 text-fg-default text-sm mb-3">
+      <input
+        type="checkbox"
+        checked={seqDl ?? false}
+        onChange={() => { void toggleSeq(); }}
+      />
+      Sequential download
+    </label>
+  );
+
+  if (q.isLoading) return <div>{header}<div className="text-fg-muted text-sm">Loading files…</div></div>;
+  if (q.error) return <div>{header}<div className="text-danger-fg text-sm">{(q.error as Error).message}</div></div>;
 
   if (isMobile) {
     return (
       <div className="flex flex-col gap-2">
+        {header}
         {(q.data ?? []).map((f) => {
           const value: FilePriorityValue = KNOWN_PRIORITIES.has(f.priority)
             ? (f.priority as FilePriorityValue)
@@ -137,7 +160,9 @@ export function FilesTab({ hash }: { hash: string }) {
   }
 
   return (
-    <table className="w-full">
+    <div>
+      {header}
+      <table className="w-full">
       <thead>
         <tr className="bg-canvas-subtle border-b border-border-default text-fg-muted text-xs font-semibold uppercase tracking-wider">
           <th className="text-left py-2 px-3">Name</th>
@@ -204,6 +229,7 @@ export function FilesTab({ hash }: { hash: string }) {
           );
         })}
       </tbody>
-    </table>
+      </table>
+    </div>
   );
 }

@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import { useSync } from '@/hooks/useSync';
 import { TopBar } from '@/components/Layout/TopBar';
 import { SearchBar } from '@/components/Search/SearchBar';
-import { ResultsTable } from '@/components/Search/ResultsTable';
+import { ResultsTable, resultKey } from '@/components/Search/ResultsTable';
+import { ResultDetails } from '@/components/Search/ResultDetails';
 import { startSearch, stopSearch, deleteSearch, fetchSearchResults } from '@/api/search';
 import { AddTorrent } from '@/components/Modals/AddTorrent';
 import type { SearchResult } from '@/api/types';
@@ -16,6 +17,7 @@ export default function SearchPage() {
   const [running, setRunning] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [prefill, setPrefill] = useState('');
+  const [selected, setSelected] = useState<SearchResult | null>(null);
   const pollRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   useEffect(() => () => {
@@ -24,8 +26,9 @@ export default function SearchPage() {
   }, [sessionId]);
 
   async function start(pattern: string, plugins: 'enabled' | string[], category: string) {
-    setError(null); setResults([]);
-    if (sessionId !== null) { await stopSearch(sessionId).catch(() => {}); await deleteSearch(sessionId).catch(() => {}); }
+    setError(null); setResults([]); setSelected(null);
+    // Previous session (if any) is cleaned up by the useEffect cleanup
+    // when sessionId changes — avoids double stop/delete (which 404s).
     try {
       const { id } = await startSearch(pattern, plugins, category);
       setSessionId(id); setRunning(true); poll(id);
@@ -57,9 +60,21 @@ export default function SearchPage() {
           {running ? `Searching… ${results.length} results so far` : `${results.length} results`}
         </div>
       )}
-      <div className="flex-1 overflow-auto pb-safe">
-        <ResultsTable results={results} onAdd={add} />
+      <div className="flex-1 overflow-auto pb-mobile-nav">
+        <ResultsTable
+          results={results}
+          onAdd={add}
+          onSelect={setSelected}
+          selectedKey={selected ? resultKey(selected) : null}
+        />
       </div>
+      {selected && (
+        <ResultDetails
+          result={selected}
+          onClose={() => setSelected(null)}
+          onAdd={add}
+        />
+      )}
       {ui.activeModal === 'add' &&
         <AddTorrent initialUrl={prefill} categories={Object.keys(state.categories)} />}
     </div>

@@ -1,8 +1,13 @@
 import { useMemo, useState } from 'react';
+import clsx from 'clsx';
 import type { SearchResult } from '@/api/types';
 import { formatBytes } from '@/lib/format';
 import { Button } from '@/components/ui/Button';
 import { useIsMobile } from '@/hooks/useIsMobile';
+
+export function resultKey(r: SearchResult): string {
+  return `${r.siteUrl}|${r.fileUrl}|${r.fileName}`;
+}
 
 type SortKey = 'fileName' | 'fileSize' | 'nbSeeders' | 'nbLeechers' | 'siteUrl';
 type SortDir = 'asc' | 'desc';
@@ -16,10 +21,12 @@ const COLS: { key: SortKey; label: string; align: 'left' | 'right'; width?: stri
 ];
 
 export function ResultsTable({
-  results, onAdd,
+  results, onAdd, onSelect, selectedKey,
 }: {
   results: SearchResult[];
   onAdd: (url: string) => void;
+  onSelect: (r: SearchResult) => void;
+  selectedKey: string | null;
 }) {
   const isMobile = useIsMobile();
   const [sortKey, setSortKey] = useState<SortKey>('nbSeeders');
@@ -62,7 +69,13 @@ export function ResultsTable({
           ))}
         </div>
         {sorted.map((r, i) => (
-          <ResultCard key={i} r={r} onAdd={onAdd} />
+          <ResultCard
+            key={i}
+            r={r}
+            onAdd={onAdd}
+            onSelect={onSelect}
+            selected={resultKey(r) === selectedKey}
+          />
         ))}
       </div>
     );
@@ -97,46 +110,70 @@ export function ResultsTable({
         </tr>
       </thead>
       <tbody>
-        {sorted.map((r, i) => (
-          <tr key={i} className="border-b border-border-muted hover:bg-canvas-subtle">
-            <td className="px-3 py-2 truncate text-fg-default max-w-2xl">{r.fileName}</td>
-            <td className="text-right px-3 tabular-nums text-fg-default whitespace-nowrap">
-              {r.fileSize > 0 ? formatBytes(r.fileSize) : '—'}
-            </td>
-            <td className="text-right px-3 tabular-nums text-success-fg font-semibold">{r.nbSeeders}</td>
-            <td className="text-right px-3 tabular-nums text-attention-fg font-semibold">{r.nbLeechers}</td>
-            <td className="px-3 truncate">
-              <a
-                href={r.descrLink}
-                target="_blank"
-                rel="noreferrer"
-                className="text-fg-muted hover:text-fg-default"
-              >
-                {new URL(r.siteUrl).hostname}
-              </a>
-            </td>
-            <td className="text-right pr-3">
-              <Button
-                variant="ghost"
-                density="sm"
-                className="text-accent-fg hover:bg-accent-subtle"
-                onClick={() => onAdd(r.fileUrl)}
-              >
-                + Add
-              </Button>
-            </td>
-          </tr>
-        ))}
+        {sorted.map((r, i) => {
+          const selected = resultKey(r) === selectedKey;
+          return (
+            <tr
+              key={i}
+              onClick={() => onSelect(r)}
+              className={clsx(
+                'border-b border-border-muted cursor-pointer',
+                selected ? 'bg-accent-subtle' : 'hover:bg-canvas-subtle',
+              )}
+            >
+              <td className="px-3 py-2 truncate text-fg-default max-w-2xl">{r.fileName}</td>
+              <td className="text-right px-3 tabular-nums text-fg-default whitespace-nowrap">
+                {r.fileSize > 0 ? formatBytes(r.fileSize) : '—'}
+              </td>
+              <td className="text-right px-3 tabular-nums text-success-fg font-semibold">{r.nbSeeders}</td>
+              <td className="text-right px-3 tabular-nums text-attention-fg font-semibold">{r.nbLeechers}</td>
+              <td className="px-3 truncate">
+                <a
+                  href={r.descrLink}
+                  target="_blank"
+                  rel="noreferrer"
+                  onClick={(e) => e.stopPropagation()}
+                  className="text-fg-muted hover:text-fg-default"
+                >
+                  {new URL(r.siteUrl).hostname}
+                </a>
+              </td>
+              <td className="text-right pr-3">
+                <Button
+                  variant="ghost"
+                  density="sm"
+                  className="text-accent-fg hover:bg-accent-subtle"
+                  onClick={(e) => { e.stopPropagation(); onAdd(r.fileUrl); }}
+                >
+                  + Add
+                </Button>
+              </td>
+            </tr>
+          );
+        })}
       </tbody>
     </table>
   );
 }
 
-function ResultCard({ r, onAdd }: { r: SearchResult; onAdd: (url: string) => void }) {
+function ResultCard({
+  r, onAdd, onSelect, selected,
+}: {
+  r: SearchResult;
+  onAdd: (url: string) => void;
+  onSelect: (r: SearchResult) => void;
+  selected: boolean;
+}) {
   let host = '';
   try { host = new URL(r.siteUrl).hostname; } catch { host = r.siteUrl; }
   return (
-    <div className="flex flex-col gap-1.5 px-3 py-2 border-b border-border-muted">
+    <div
+      onClick={() => onSelect(r)}
+      className={clsx(
+        'flex flex-col gap-1.5 px-3 py-2 border-b border-border-muted cursor-pointer',
+        selected ? 'bg-accent-subtle' : 'active:bg-canvas-subtle',
+      )}
+    >
       <div className="flex items-start gap-2 min-w-0">
         <div className="flex-1 text-sm font-medium text-fg-default break-words">{r.fileName}</div>
         <div className="shrink-0 tabular-nums text-xs text-fg-muted whitespace-nowrap">
@@ -150,6 +187,7 @@ function ResultCard({ r, onAdd }: { r: SearchResult; onAdd: (url: string) => voi
           href={r.descrLink}
           target="_blank"
           rel="noreferrer"
+          onClick={(e) => e.stopPropagation()}
           className="truncate text-fg-muted hover:text-fg-default"
         >
           {host}
@@ -159,7 +197,7 @@ function ResultCard({ r, onAdd }: { r: SearchResult; onAdd: (url: string) => voi
             variant="ghost"
             density="sm"
             className="text-accent-fg hover:bg-accent-subtle"
-            onClick={() => onAdd(r.fileUrl)}
+            onClick={(e) => { e.stopPropagation(); onAdd(r.fileUrl); }}
           >
             + Add
           </Button>

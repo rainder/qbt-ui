@@ -16,8 +16,8 @@ import {
 } from '@/api/torrents';
 
 export function TorrentTable({ rows }: { rows: Partial<Torrent>[] }) {
-  const { openDetails, activeHash, openModal } = useUi();
-  const { has, selectOnly, toggle, selectRange, hashes } = useSelection();
+  const { openDetails, closeDetails, activeHash, openModal } = useUi();
+  const { has, selectOnly, toggle, selectRange, hashes, clear } = useSelection();
   const isMobile = useIsMobile();
 
   const lastClickedRef = useRef<string | null>(null);
@@ -157,7 +157,7 @@ export function TorrentTable({ rows }: { rows: Partial<Torrent>[] }) {
   })();
 
   return (
-    <div ref={parentRef} className="h-full overflow-auto pb-safe" data-testid="torrent-list">
+    <div ref={parentRef} className="h-full overflow-auto pb-mobile-nav" data-testid="torrent-list">
       {/* Desktop: min-width forces horizontal scroll for the table columns.
           Mobile: cards flow naturally, no min-width. */}
       <div className={isMobile ? 'flex flex-col' : 'min-w-[1100px] flex flex-col'}>
@@ -196,9 +196,15 @@ export function TorrentTable({ rows }: { rows: Partial<Torrent>[] }) {
                       } else if (e.metaKey || e.ctrlKey) {
                         toggle(hash);
                         lastClickedRef.current = hash;
+                      } else if (has(hash) && hashes().length === 1) {
+                        // Toggle off: clicking the only selected row deselects + closes details.
+                        clear();
+                        closeDetails();
+                        lastClickedRef.current = null;
                       } else {
                         selectOnly(hash);
                         lastClickedRef.current = hash;
+                        openDetails(hash);
                       }
                     }}
                     onDouble={() => openDetails(hash)}
