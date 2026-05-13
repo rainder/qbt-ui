@@ -1,5 +1,6 @@
-import { useRef, useState } from 'react';
-import { useVirtualizer } from '@tanstack/react-virtual';
+import { useLayoutEffect, useRef, useState } from 'react';
+import { useWindowVirtualizer } from '@tanstack/react-virtual';
+import clsx from 'clsx';
 import type { Torrent } from '@/api/types';
 import { TorrentRow } from './TorrentRow';
 import { TorrentCard } from './TorrentCard';
@@ -22,12 +23,35 @@ export function TorrentTable({ rows }: { rows: Partial<Torrent>[] }) {
 
   const lastClickedRef = useRef<string | null>(null);
 
-  const parentRef = useRef<HTMLDivElement>(null);
-  const v = useVirtualizer({
+  // The virtualized list is offset from the document top by everything
+  // rendered above it (TopBar on desktop, page header/safe-area on mobile).
+  // useWindowVirtualizer needs this `scrollMargin` so it knows where the
+  // first row lives in document-scroll coordinates.
+  const listRef = useRef<HTMLDivElement>(null);
+  const [scrollMargin, setScrollMargin] = useState(0);
+  useLayoutEffect(() => {
+    const el = listRef.current;
+    if (!el) return;
+    const recalc = () => {
+      setScrollMargin(el.getBoundingClientRect().top + window.scrollY);
+    };
+    recalc();
+    window.addEventListener('resize', recalc);
+    // Catch layout shifts when ancestors change size (TopBar mounting on
+    // desktop, sidebar opening, sticky header height changing on rotate).
+    const ro = new ResizeObserver(recalc);
+    if (el.parentElement) ro.observe(el.parentElement);
+    return () => {
+      window.removeEventListener('resize', recalc);
+      ro.disconnect();
+    };
+  }, []);
+
+  const v = useWindowVirtualizer({
     count: rows.length,
-    getScrollElement: () => parentRef.current,
     estimateSize: () => (isMobile ? 84 : 44),
     overscan: 16,
+    scrollMargin,
   });
 
   const [menu, setMenu] = useState<{ x: number; y: number } | null>(null);
@@ -157,21 +181,21 @@ export function TorrentTable({ rows }: { rows: Partial<Torrent>[] }) {
   })();
 
   return (
-    <div ref={parentRef} className="h-full overflow-auto pb-mobile-nav" data-testid="torrent-list">
+    <div className="pb-mobile-nav" data-testid="torrent-list">
       {/* Desktop: min-width forces horizontal scroll for the table columns.
           Mobile: cards flow naturally, no min-width. */}
-      <div className={isMobile ? 'flex flex-col' : 'min-w-[1100px] flex flex-col'}>
-        <div className="sticky top-0 z-10 bg-canvas-subtle">
+      <div className={clsx('flex flex-col', isMobile ? '' : 'min-w-[1100px]')}>
+        <div className="sticky top-0 md:top-14 z-10 bg-canvas-subtle">
           {isMobile ? <MobileSortBar /> : <ColumnHeader />}
         </div>
-        <div style={{ height: v.getTotalSize(), position: 'relative' }}>
+        <div ref={listRef} style={{ height: v.getTotalSize(), position: 'relative' }}>
           {v.getVirtualItems().map((vi) => {
             const t = rows[vi.index];
             const hash = t.hash!;
             return (
               <div key={hash} style={{
                 position: 'absolute', top: 0, left: 0, right: 0,
-                transform: `translateY(${vi.start}px)`,
+                transform: `translateY(${vi.start - scrollMargin}px)`,
               }}>
                 {isMobile ? (
                   <TorrentCard

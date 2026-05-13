@@ -30,7 +30,7 @@ export function TopBar({ serverState }: { serverState?: ServerState }) {
   const toggleSidebar = useUi((s) => s.toggleSidebar);
 
   return (
-    <div className="hidden md:flex h-14 bg-canvas border-b border-border-muted items-center px-2 sm:px-3 gap-2 sm:gap-3 shrink-0">
+    <div className="hidden md:flex sticky top-0 z-20 h-14 bg-canvas border-b border-border-muted items-center px-2 sm:px-3 gap-2 sm:gap-3 shrink-0">
       {/* Sidebar toggle */}
       <button
         onClick={toggleSidebar}

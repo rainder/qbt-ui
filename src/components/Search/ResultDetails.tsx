@@ -29,8 +29,13 @@ export function ResultDetails({
 
   if (isMobile) return <MobileView result={result} host={host} linkKind={linkKind} onClose={onClose} onAdd={onAdd} />;
 
+  // Desktop: fixed bottom panel pinned to the viewport so the document
+  // scrolls behind it.
   return (
-    <div className="border-t border-border-default bg-canvas-subtle flex flex-col" style={{ height: '40vh' }}>
+    <div
+      className="fixed bottom-0 left-0 right-0 z-20 border-t border-border-default bg-canvas-subtle flex flex-col"
+      style={{ height: '40vh' }}
+    >
       <div className="px-4 h-10 border-b border-border-default flex items-center gap-3 shrink-0">
         <div className="text-sm font-semibold text-fg-default truncate">{result.fileName}</div>
         <div className="flex-1" />

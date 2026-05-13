@@ -30,21 +30,25 @@ export function SettingsLayout({ pluginsTab }: { pluginsTab: React.ReactNode }) 
   }
 
   return (
-    <div className="h-full flex flex-col">
+    <div className="min-h-screen flex flex-col">
       <TopBar serverState={state.serverState} />
-      <div className="flex-1 min-h-0 flex relative">
+      <div className="flex-1 flex relative">
         {!sidebarCollapsed && (
           <>
-            {/* Mobile-only backdrop. Sits inside the content area so the topbar/toggle stay reachable. */}
+            {/* Mobile-only backdrop. Pinned to viewport so it works with
+                document scroll. */}
             <button
               type="button"
               aria-label="Close sidebar"
               onClick={toggleSidebar}
-              className="md:hidden absolute inset-0 z-20 bg-black/50"
+              className="md:hidden fixed inset-0 z-20 bg-black/50"
             />
-            {/* Settings sidebar — overlay on mobile, in-flow on md+ */}
-            <div className="absolute md:static inset-y-0 left-0 z-30 md:z-auto flex">
-              <nav className="w-60 bg-canvas border-r border-border-muted py-4 px-3 flex flex-col gap-px shrink-0">
+            {/* Settings sidebar — overlay on mobile, sticky on md+ */}
+            <div className="fixed md:sticky md:top-14 inset-y-0 left-0 z-30 md:z-auto flex h-screen md:h-[calc(100vh-3.5rem)]">
+              <nav
+                className="w-60 bg-canvas border-r border-border-muted pb-4 px-3 flex flex-col gap-px shrink-0 overflow-y-auto"
+                style={{ paddingTop: 'calc(env(safe-area-inset-top) + 1rem)' }}
+              >
                 <div className="text-fg-muted text-xs font-semibold uppercase tracking-wider px-3 mb-1">
                   Settings
                 </div>
@@ -69,8 +73,11 @@ export function SettingsLayout({ pluginsTab }: { pluginsTab: React.ReactNode }) 
             </div>
           </>
         )}
-        {/* Content */}
-        <div className="flex-1 overflow-auto p-6 max-w-3xl pb-mobile-nav">
+        {/* Content — flows in the document, no internal scroll. */}
+        <div
+          className="flex-1 px-6 pb-mobile-nav max-w-3xl"
+          style={{ paddingTop: 'calc(env(safe-area-inset-top) + 1.5rem)' }}
+        >
           <Routes>
             <Route index element={<Navigate to="general" replace />} />
             <Route path="general" element={<General />} />

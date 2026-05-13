@@ -50,7 +50,7 @@ export default function SearchPage() {
   }
 
   return (
-    <div className="h-full flex flex-col">
+    <div className="min-h-screen flex flex-col">
       <TopBar serverState={state.serverState} />
       <SearchBar onStart={start} />
       {running && <div className="loading-bar" aria-label="Loading search results" />}
@@ -60,7 +60,7 @@ export default function SearchPage() {
           {running ? `Searching… ${results.length} results so far` : `${results.length} results`}
         </div>
       )}
-      <div className="flex-1 overflow-auto pb-mobile-nav">
+      <div className="pb-mobile-nav">
         <ResultsTable
           results={results}
           onAdd={add}
@@ -69,11 +69,15 @@ export default function SearchPage() {
         />
       </div>
       {selected && (
-        <ResultDetails
-          result={selected}
-          onClose={() => setSelected(null)}
-          onAdd={add}
-        />
+        <>
+          {/* Spacer so the last result row clears the fixed desktop details panel. */}
+          <div aria-hidden className="hidden md:block" style={{ height: '40vh' }} />
+          <ResultDetails
+            result={selected}
+            onClose={() => setSelected(null)}
+            onAdd={add}
+          />
+        </>
       )}
       {ui.activeModal === 'add' &&
         <AddTorrent initialUrl={prefill} categories={Object.keys(state.categories)} />}

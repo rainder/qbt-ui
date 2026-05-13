@@ -47,14 +47,14 @@ export function MobileBottomBar() {
 
   return (
     <div
-      className="md:hidden fixed left-1/2 -translate-x-1/2 z-30 pointer-events-none"
-      style={{ bottom: 'calc(env(safe-area-inset-bottom) + 10px)' }}
+      className="md:hidden fixed left-3.5 right-3.5 z-30 pointer-events-none"
+      style={{ bottom: 'max(0.5rem, env(safe-area-inset-bottom))' }}
     >
       <div
         className={clsx(
-          'pointer-events-auto flex items-center gap-1 px-2 py-1.5',
-          'rounded-full border border-border-default bg-canvas/80 backdrop-blur-xl',
-          'shadow-[0_8px_24px_rgba(0,0,0,0.4)]',
+          'pointer-events-auto flex items-center justify-around gap-1 px-2 h-[62px]',
+          'rounded-[28px] border border-border-muted bg-canvas-subtle/80 backdrop-blur-xl backdrop-saturate-150',
+          'shadow-[0_10px_40px_rgba(0,0,0,0.45),0_2px_6px_rgba(0,0,0,0.25)]',
         )}
       >
         <NavTab to="/" active={isHome} label="Torrents">
@@ -89,7 +89,7 @@ export function MobileBottomBar() {
           <FiltersIcon />
         </ActionTab>
 
-        <div ref={moreRef} className="relative">
+        <div ref={moreRef} className="relative flex-1 max-w-[64px] flex justify-center">
           <ActionTab
             label="More"
             onClick={() => setMoreOpen((v) => !v)}
@@ -152,7 +152,7 @@ function NavTab({
       to={to}
       aria-label={label}
       className={clsx(
-        'inline-flex items-center justify-center w-12 h-11 rounded-full transition-colors',
+        'inline-flex items-center justify-center flex-1 h-11 max-w-[64px] rounded-full transition-colors',
         active ? 'text-fg-default bg-accent-subtle' : 'text-fg-muted hover:text-fg-default',
       )}
     >
@@ -177,7 +177,7 @@ function ActionTab({
       aria-expanded={ariaExpanded}
       onClick={onClick}
       className={clsx(
-        'inline-flex items-center justify-center w-12 h-11 rounded-full transition-colors',
+        'inline-flex items-center justify-center flex-1 h-11 max-w-[64px] rounded-full transition-colors',
         emphasized
           ? 'bg-accent-emphasis text-fg-on-emphasis'
           : 'text-fg-muted hover:text-fg-default',

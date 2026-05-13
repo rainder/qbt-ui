@@ -144,21 +144,21 @@ export default function TorrentListPage() {
 
   return (
     <div
-      className="h-full flex flex-col bg-canvas relative"
+      className="min-h-screen flex flex-col bg-canvas"
       onDragEnter={onDragEnter}
       onDragOver={onDragOver}
       onDragLeave={onDragLeave}
       onDrop={onDrop}
     >
       {isDragging && (
-        <div className="absolute inset-0 z-50 pointer-events-none flex items-center justify-center">
+        <div className="fixed inset-0 z-50 pointer-events-none flex items-center justify-center">
           <div className="absolute inset-4 border-2 border-dashed border-accent-muted rounded-lg bg-accent-subtle/20" />
           <span className="relative text-accent-fg text-lg font-medium">Drop to add torrents</span>
         </div>
       )}
       <TopBar serverState={state.serverState} />
-      <div className="flex-1 min-h-0 flex relative">
-        {/* Mobile-only backdrop — fades in/out with the sidebar. */}
+      <div className="flex-1 flex relative">
+        {/* Mobile-only backdrop — covers the viewport while the sidebar is open. */}
         <button
           type="button"
           aria-hidden={ui.sidebarCollapsed}
@@ -166,15 +166,17 @@ export default function TorrentListPage() {
           tabIndex={ui.sidebarCollapsed ? -1 : 0}
           onClick={ui.toggleSidebar}
           className={[
-            'md:hidden absolute inset-0 z-20 bg-black/50 transition-opacity duration-200',
+            'md:hidden fixed inset-0 z-20 bg-black/50 transition-opacity duration-200',
             ui.sidebarCollapsed ? 'opacity-0 pointer-events-none' : 'opacity-100',
           ].join(' ')}
         />
-        {/* Sidebar — overlay on mobile (slides), in-flow on md+ (width collapses). */}
+        {/* Sidebar — overlay on mobile (fixed slide), sticky on desktop so it
+            stays put while the document scrolls. */}
         <div
           aria-hidden={ui.sidebarCollapsed}
           className={[
-            'absolute md:static inset-y-0 left-0 z-30 md:z-auto flex overflow-hidden',
+            'fixed md:sticky md:top-14 inset-y-0 left-0 z-30 md:z-auto flex overflow-hidden',
+            'h-screen md:h-[calc(100vh-3.5rem)]',
             'transition-[transform,width] duration-200 ease-in-out motion-reduce:transition-none',
             ui.sidebarCollapsed
               ? '-translate-x-full md:translate-x-0 md:w-0'
@@ -184,11 +186,17 @@ export default function TorrentListPage() {
           <Sidebar torrents={state.torrents} categories={state.categories} tags={state.tags} />
         </div>
         <div className="flex-1 min-w-0 flex flex-col">
-          <div className="flex-1 min-h-0">
-            <TorrentTable rows={displayedRows} />
-          </div>
-          {ui.detailsOpen && ui.activeHash && state.torrents[ui.activeHash] &&
-            <DetailsPanel torrent={state.torrents[ui.activeHash]!} />}
+          <TorrentTable rows={displayedRows} />
+          {/* Reserve space at the bottom of the document so the last torrent
+              row can scroll above the fixed-bottom DetailsPanel on desktop.
+              Mobile DetailsPanel is a full-screen overlay (handled in MobileBottomBar's pb-mobile-nav).
+            */}
+          {ui.detailsOpen && ui.activeHash && state.torrents[ui.activeHash] && (
+            <>
+              <div aria-hidden className="hidden md:block" style={{ height: '40vh' }} />
+              <DetailsPanel torrent={state.torrents[ui.activeHash]!} />
+            </>
+          )}
         </div>
       </div>
       {error && <div className="border-t border-danger-fg text-danger-fg px-4 py-2 text-sm">{error}</div>}

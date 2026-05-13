@@ -37,7 +37,10 @@ export function Sidebar({
   }, [torrents]);
 
   return (
-    <div className="w-60 bg-canvas border-r border-border-muted overflow-auto py-4 px-3 text-sm shrink-0">
+    <div
+      className="w-60 bg-canvas border-r border-border-muted overflow-auto pb-4 px-3 text-sm shrink-0"
+      style={{ paddingTop: 'calc(env(safe-area-inset-top) + 1rem)' }}
+    >
       <Section label="Status" first>
         {STATUSES.map((s) => (
           <Row

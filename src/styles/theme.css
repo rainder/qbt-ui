@@ -1,15 +1,35 @@
 :root { color-scheme: dark; }
 
-html, body, #root { height: 100%; }
+/* No forced height — body grows with content and the document scrolls.
+   This matches the architecture used by the sibling Casa Della Pasta PWA,
+   which works cleanly in iOS standalone mode. The torrent list uses
+   `useWindowVirtualizer` so the window itself is the scroll container. */
+html {
+  /* Suppress page-level rubber band so it can't reveal body underneath. */
+  overscroll-behavior-y: contain;
+  /* Kill the WebKit blue tap flash so buttons don't look webby on iOS. */
+  -webkit-tap-highlight-color: transparent;
+  /* Suppress iOS long-press "save image / copy link" menu on UI chrome. */
+  -webkit-touch-callout: none;
+}
 
-/* iOS PWA: respect notch / status bar at the global level.
-   Bottom inset is NOT applied here — apply `.pb-safe` to scrollable content
-   containers instead so users can scroll the last item past the home
-   indicator without leaving a permanent dead strip on every page.
+/* Interactive elements never let the user select label text or drag links.
+   Text-y elements keep default selection so real content stays copyable. */
+button, a, [role='button'], [role='tab'], [role='menuitem'], [role='option'] {
+  user-select: none;
+  -webkit-user-select: none;
+  /* Kill the 300ms tap delay on mobile Safari. */
+  touch-action: manipulation;
+}
+
+/* iOS PWA: respect notch / status bar at the global level for left/right only.
+   Top inset is NOT applied here — instead, individual top elements opt in via
+   `.pt-safe` so the iOS status bar can translucently overlay the bar's
+   background (the native iOS pattern). Bottom inset is handled per-container
+   via `.pb-safe` / `.pb-mobile-nav`.
    Pairs with viewport-fit=cover in index.html. */
 #root {
   box-sizing: border-box;
-  padding-top: env(safe-area-inset-top);
   padding-left: env(safe-area-inset-left);
   padding-right: env(safe-area-inset-right);
 }
@@ -21,10 +41,11 @@ html, body, #root { height: 100%; }
 }
 
 /* Add to a mobile scroll container that sits under the floating bottom
-   pill bar (MobileBottomBar). Includes safe-area inset + bar height + gap.
-   Desktop falls back to no extra padding (bar is hidden). */
+   pill bar (MobileBottomBar). Static padding (no env math) — matches the
+   approach used by other PWAs that work cleanly on iOS. Desktop drops the
+   padding (the bar is hidden there). */
 .pb-mobile-nav {
-  padding-bottom: calc(env(safe-area-inset-bottom) + 72px);
+  padding-bottom: 90px;
 }
 @media (min-width: 768px) {
   .pb-mobile-nav {

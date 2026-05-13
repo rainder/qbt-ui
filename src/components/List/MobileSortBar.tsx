@@ -16,7 +16,10 @@ const OPTIONS: { key: SortKey; label: string }[] = [
 export function MobileSortBar() {
   const { sortKey, sortDir, setSort } = useUi();
   return (
-    <div className="flex items-center gap-1 px-2 py-1.5 text-xs text-fg-muted border-b border-border-default overflow-x-auto">
+    <div
+      className="flex items-center gap-1 px-2 pb-1.5 text-xs text-fg-muted border-b border-border-default overflow-x-auto bg-canvas-subtle"
+      style={{ paddingTop: 'calc(env(safe-area-inset-top) + 6px)' }}
+    >
       <span className="shrink-0 mr-1 uppercase tracking-wider font-semibold">Sort</span>
       {OPTIONS.map((o) => {
         const active = sortKey === o.key;

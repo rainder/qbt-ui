@@ -22,6 +22,7 @@ export function DetailsPanel({ torrent }: { torrent: Partial<Torrent> }) {
   const isMobile = useIsMobile();
   const close = useUi((s) => s.closeDetails);
   const openModal = useUi((s) => s.openModal);
+  const sidebarCollapsed = useUi((s) => s.sidebarCollapsed);
   const [tab, setTab] = useState<Tab>('general');
 
   if (isMobile) {
@@ -36,8 +37,16 @@ export function DetailsPanel({ torrent }: { torrent: Partial<Torrent> }) {
     );
   }
 
+  // Desktop: fixed bottom panel, pinned to viewport bottom so the document
+  // can scroll behind it. Slides over to clear the sidebar when expanded.
   return (
-    <div className="border-t border-border-default bg-canvas-subtle flex flex-col" style={{ height: '40vh' }}>
+    <div
+      className={clsx(
+        'fixed bottom-0 right-0 z-20 border-t border-border-default bg-canvas-subtle flex flex-col',
+        sidebarCollapsed ? 'left-0' : 'left-0 md:left-60',
+      )}
+      style={{ height: '40vh' }}
+    >
       <div className="px-4 h-10 border-b border-border-default flex items-center gap-1 shrink-0">
         {TABS.map((t) => (
           <button

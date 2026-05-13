@@ -21,7 +21,8 @@ export function SearchBar({ onStart }: {
         e.preventDefault();
         if (pattern.trim()) onStart(pattern, plugin === 'enabled' ? 'enabled' : [plugin], category);
       }}
-      className="flex flex-wrap gap-2 p-4 border-b border-border-default items-center bg-canvas-subtle"
+      className="flex flex-wrap gap-2 px-4 pb-4 border-b border-border-default items-center bg-canvas-subtle"
+      style={{ paddingTop: 'calc(env(safe-area-inset-top) + 1rem)' }}
     >
       <Input
         autoFocus

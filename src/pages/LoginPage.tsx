@@ -26,7 +26,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="grid place-items-center min-h-full bg-canvas">
+    <div className="grid place-items-center min-h-screen bg-canvas">
       <div className="flex flex-col items-center gap-4">
         {/* Brand above card */}
         <div className="flex items-center gap-2 text-fg-default font-light text-2xl">
