@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthGate } from './components/AuthGate';
@@ -14,6 +15,18 @@ const qc = new QueryClient({ defaultOptions: { queries: { staleTime: 5_000, retr
 
 function CompletionWatcher() {
   useCompletionNotifications();
+  return null;
+}
+
+// Force-collapse sidebar once per app load if viewport is mobile-sized.
+// Persisted "open" state from desktop shouldn't bleed onto a phone.
+function MobileSidebarInit() {
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    if (window.innerWidth < 768 && !useUi.getState().sidebarCollapsed) {
+      useUi.getState().toggleSidebar();
+    }
+  }, []);
   return null;
 }
 
@@ -41,6 +54,7 @@ export function App() {
       <BrowserRouter>
         <GlobalKeybinds />
         <CompletionWatcher />
+        <MobileSidebarInit />
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route element={<AuthGate />}>

@@ -2,10 +2,12 @@ import { useRef, useState } from 'react';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import type { Torrent } from '@/api/types';
 import { TorrentRow } from './TorrentRow';
+import { TorrentCard } from './TorrentCard';
 import { ColumnHeader } from './ColumnHeader';
 import { ContextMenu, type ContextMenuItem } from './ContextMenu';
 import { useSelection } from '@/stores/selection';
 import { useUi } from '@/stores/ui';
+import { useIsMobile } from '@/hooks/useIsMobile';
 import {
   pause, resume, recheck, reannounce,
   toggleSequentialDownload, toggleFirstLastPiecePrio,
@@ -15,6 +17,7 @@ import {
 export function TorrentTable({ rows }: { rows: Partial<Torrent>[] }) {
   const { openDetails, activeHash, openModal } = useUi();
   const { has, selectOnly, toggle, selectRange, hashes } = useSelection();
+  const isMobile = useIsMobile();
 
   const lastClickedRef = useRef<string | null>(null);
 
@@ -22,7 +25,7 @@ export function TorrentTable({ rows }: { rows: Partial<Torrent>[] }) {
   const v = useVirtualizer({
     count: rows.length,
     getScrollElement: () => parentRef.current,
-    estimateSize: () => 44,
+    estimateSize: () => (isMobile ? 84 : 44),
     overscan: 16,
   });
 
@@ -153,9 +156,15 @@ export function TorrentTable({ rows }: { rows: Partial<Torrent>[] }) {
   })();
 
   return (
-    <div className="flex flex-col h-full">
-      <ColumnHeader />
-      <div ref={parentRef} className="flex-1 overflow-auto" data-testid="torrent-list">
+    <div ref={parentRef} className="h-full overflow-auto pb-safe" data-testid="torrent-list">
+      {/* Desktop: min-width forces horizontal scroll for the table columns.
+          Mobile: cards flow naturally, no min-width. */}
+      <div className={isMobile ? 'flex flex-col' : 'min-w-[1100px] flex flex-col'}>
+        {!isMobile && (
+          <div className="sticky top-0 z-10 bg-canvas-subtle">
+            <ColumnHeader />
+          </div>
+        )}
         <div style={{ height: v.getTotalSize(), position: 'relative' }}>
           {v.getVirtualItems().map((vi) => {
             const t = rows[vi.index];
@@ -165,25 +174,38 @@ export function TorrentTable({ rows }: { rows: Partial<Torrent>[] }) {
                 position: 'absolute', top: 0, left: 0, right: 0,
                 transform: `translateY(${vi.start}px)`,
               }}>
-                <TorrentRow
-                  t={t}
-                  selected={has(hash)}
-                  active={activeHash === hash}
-                  onClick={(e) => {
-                    if (e.shiftKey && lastClickedRef.current) {
-                      const orderedHashes = rows.map((r) => r.hash!).filter(Boolean);
-                      selectRange(orderedHashes, lastClickedRef.current, hash);
-                    } else if (e.metaKey || e.ctrlKey) {
-                      toggle(hash);
-                      lastClickedRef.current = hash;
-                    } else {
+                {isMobile ? (
+                  <TorrentCard
+                    t={t}
+                    selected={has(hash)}
+                    active={activeHash === hash}
+                    onClick={() => {
                       selectOnly(hash);
-                      lastClickedRef.current = hash;
-                    }
-                  }}
-                  onDouble={() => openDetails(hash)}
-                  onContextMenu={(e) => onContextMenu(e, hash)}
-                />
+                      openDetails(hash);
+                    }}
+                    onContextMenu={(e) => onContextMenu(e, hash)}
+                  />
+                ) : (
+                  <TorrentRow
+                    t={t}
+                    selected={has(hash)}
+                    active={activeHash === hash}
+                    onClick={(e) => {
+                      if (e.shiftKey && lastClickedRef.current) {
+                        const orderedHashes = rows.map((r) => r.hash!).filter(Boolean);
+                        selectRange(orderedHashes, lastClickedRef.current, hash);
+                      } else if (e.metaKey || e.ctrlKey) {
+                        toggle(hash);
+                        lastClickedRef.current = hash;
+                      } else {
+                        selectOnly(hash);
+                        lastClickedRef.current = hash;
+                      }
+                    }}
+                    onDouble={() => openDetails(hash)}
+                    onContextMenu={(e) => onContextMenu(e, hash)}
+                  />
+                )}
               </div>
             );
           })}

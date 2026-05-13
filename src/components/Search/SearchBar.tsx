@@ -21,16 +21,20 @@ export function SearchBar({ onStart }: {
         e.preventDefault();
         if (pattern.trim()) onStart(pattern, plugin === 'enabled' ? 'enabled' : [plugin], category);
       }}
-      className="flex gap-2 p-4 border-b border-border-default items-center bg-canvas-subtle"
+      className="flex flex-wrap gap-2 p-4 border-b border-border-default items-center bg-canvas-subtle"
     >
       <Input
         autoFocus
         placeholder="Search torrents…"
         value={pattern}
         onChange={(e) => setPattern(e.target.value)}
-        className="flex-1 text-base"
+        className="basis-full md:flex-1 md:basis-0 text-base min-w-0"
       />
-      <Select value={category} onChange={(e) => setCategory(e.target.value)}>
+      <Select
+        value={category}
+        onChange={(e) => setCategory(e.target.value)}
+        className="flex-1 md:flex-initial min-w-0"
+      >
         <option value="all">All categories</option>
         <option value="movies">Movies</option>
         <option value="tv">TV</option>
@@ -41,7 +45,11 @@ export function SearchBar({ onStart }: {
         <option value="pictures">Pictures</option>
         <option value="books">Books</option>
       </Select>
-      <Select value={plugin} onChange={(e) => setPlugin(e.target.value)}>
+      <Select
+        value={plugin}
+        onChange={(e) => setPlugin(e.target.value)}
+        className="flex-1 md:flex-initial min-w-0"
+      >
         <option value="enabled">All enabled</option>
         {plugins.filter((p) => p.enabled).map((p) => (
           <option key={p.name} value={p.name}>{p.fullName}</option>

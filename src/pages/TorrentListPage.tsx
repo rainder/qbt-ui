@@ -144,7 +144,7 @@ export default function TorrentListPage() {
 
   return (
     <div
-      className="h-screen flex flex-col bg-canvas relative"
+      className="h-full flex flex-col bg-canvas relative"
       onDragEnter={onDragEnter}
       onDragOver={onDragOver}
       onDragLeave={onDragLeave}
@@ -157,9 +157,21 @@ export default function TorrentListPage() {
         </div>
       )}
       <TopBar serverState={state.serverState} />
-      <div className="flex-1 min-h-0 flex">
+      <div className="flex-1 min-h-0 flex relative">
         {!ui.sidebarCollapsed && (
-          <Sidebar torrents={state.torrents} categories={state.categories} tags={state.tags} />
+          <>
+            {/* Mobile-only backdrop — click to close. Stays inside content area so the topbar/toggle remain visible. */}
+            <button
+              type="button"
+              aria-label="Close sidebar"
+              onClick={ui.toggleSidebar}
+              className="md:hidden absolute inset-0 z-20 bg-black/50"
+            />
+            {/* Sidebar — overlay on mobile, in-flow on md+ */}
+            <div className="absolute md:static inset-y-0 left-0 z-30 md:z-auto flex">
+              <Sidebar torrents={state.torrents} categories={state.categories} tags={state.tags} />
+            </div>
+          </>
         )}
         <div className="flex-1 min-w-0 flex flex-col">
           <div className="flex-1 min-h-0">

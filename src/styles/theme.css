@@ -2,6 +2,24 @@
 
 html, body, #root { height: 100%; }
 
+/* iOS PWA: respect notch / status bar at the global level.
+   Bottom inset is NOT applied here — apply `.pb-safe` to scrollable content
+   containers instead so users can scroll the last item past the home
+   indicator without leaving a permanent dead strip on every page.
+   Pairs with viewport-fit=cover in index.html. */
+#root {
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+/* Add to a scrollable container so its last item can be scrolled clear of
+   the iOS home indicator. No-op on platforms where the inset is 0. */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
 body {
   margin: 0;
   background: var(--color-canvas);

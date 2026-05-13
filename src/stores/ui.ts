@@ -40,7 +40,7 @@ export const useUi = create<UiState>()(
       detailsOpen: false,
       activeHash: null,
       activeModal: null,
-      sidebarCollapsed: false,
+      sidebarCollapsed: typeof window !== 'undefined' && window.innerWidth < 768,
 
       setStatus(s) { set({ filterStatus: s }); },
       setCategory(c) { set({ filterCategory: c }); },
