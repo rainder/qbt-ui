@@ -158,21 +158,31 @@ export default function TorrentListPage() {
       )}
       <TopBar serverState={state.serverState} />
       <div className="flex-1 min-h-0 flex relative">
-        {!ui.sidebarCollapsed && (
-          <>
-            {/* Mobile-only backdrop — click to close. Stays inside content area so the topbar/toggle remain visible. */}
-            <button
-              type="button"
-              aria-label="Close sidebar"
-              onClick={ui.toggleSidebar}
-              className="md:hidden absolute inset-0 z-20 bg-black/50"
-            />
-            {/* Sidebar — overlay on mobile, in-flow on md+ */}
-            <div className="absolute md:static inset-y-0 left-0 z-30 md:z-auto flex">
-              <Sidebar torrents={state.torrents} categories={state.categories} tags={state.tags} />
-            </div>
-          </>
-        )}
+        {/* Mobile-only backdrop — fades in/out with the sidebar. */}
+        <button
+          type="button"
+          aria-hidden={ui.sidebarCollapsed}
+          aria-label="Close sidebar"
+          tabIndex={ui.sidebarCollapsed ? -1 : 0}
+          onClick={ui.toggleSidebar}
+          className={[
+            'md:hidden absolute inset-0 z-20 bg-black/50 transition-opacity duration-200',
+            ui.sidebarCollapsed ? 'opacity-0 pointer-events-none' : 'opacity-100',
+          ].join(' ')}
+        />
+        {/* Sidebar — overlay on mobile (slides), in-flow on md+ (width collapses). */}
+        <div
+          aria-hidden={ui.sidebarCollapsed}
+          className={[
+            'absolute md:static inset-y-0 left-0 z-30 md:z-auto flex overflow-hidden',
+            'transition-[transform,width] duration-200 ease-in-out motion-reduce:transition-none',
+            ui.sidebarCollapsed
+              ? '-translate-x-full md:translate-x-0 md:w-0'
+              : 'translate-x-0 md:w-60',
+          ].join(' ')}
+        >
+          <Sidebar torrents={state.torrents} categories={state.categories} tags={state.tags} />
+        </div>
         <div className="flex-1 min-w-0 flex flex-col">
           <div className="flex-1 min-h-0">
             <TorrentTable rows={displayedRows} />

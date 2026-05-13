@@ -4,6 +4,7 @@ import type { Torrent } from '@/api/types';
 import { TorrentRow } from './TorrentRow';
 import { TorrentCard } from './TorrentCard';
 import { ColumnHeader } from './ColumnHeader';
+import { MobileSortBar } from './MobileSortBar';
 import { ContextMenu, type ContextMenuItem } from './ContextMenu';
 import { useSelection } from '@/stores/selection';
 import { useUi } from '@/stores/ui';
@@ -160,11 +161,9 @@ export function TorrentTable({ rows }: { rows: Partial<Torrent>[] }) {
       {/* Desktop: min-width forces horizontal scroll for the table columns.
           Mobile: cards flow naturally, no min-width. */}
       <div className={isMobile ? 'flex flex-col' : 'min-w-[1100px] flex flex-col'}>
-        {!isMobile && (
-          <div className="sticky top-0 z-10 bg-canvas-subtle">
-            <ColumnHeader />
-          </div>
-        )}
+        <div className="sticky top-0 z-10 bg-canvas-subtle">
+          {isMobile ? <MobileSortBar /> : <ColumnHeader />}
+        </div>
         <div style={{ height: v.getTotalSize(), position: 'relative' }}>
           {v.getVirtualItems().map((vi) => {
             const t = rows[vi.index];

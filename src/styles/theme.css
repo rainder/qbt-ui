@@ -20,6 +20,20 @@ html, body, #root { height: 100%; }
   padding-bottom: env(safe-area-inset-bottom);
 }
 
+/* Companion to .pb-safe for the top inset — apply to fixed-position overlays
+   (e.g. full-screen mobile views) whose `inset-0` bypasses #root's padding. */
+.pt-safe {
+  padding-top: env(safe-area-inset-top);
+}
+
+/* Defensive: any element with `bg-canvas` may not fully cover the viewport on
+   iOS PWA (e.g. fixed inset-0 overlays, or visual-viewport shrink). Painting
+   html with the same canvas color guarantees the home-indicator strip and any
+   stray uncovered area show the right color instead of system white. */
+html {
+  background: var(--color-canvas);
+}
+
 body {
   margin: 0;
   background: var(--color-canvas);
@@ -32,3 +46,15 @@ body {
 
 /* Tailwind preflight handles base resets. Only what's missing: */
 button { cursor: pointer; }
+
+/* iOS Safari zooms the page on focus when a form field's computed font-size
+   is < 16px. Our inputs use text-xs/text-sm by design, so bump them to 16px
+   on touch-sized viewports only. Padding/box stays the same, the input just
+   gets a slightly taller text row on phones. */
+@media (max-width: 767px) {
+  input:not([type='checkbox']):not([type='radio']):not([type='range']):not([type='color']):not([type='file']),
+  select,
+  textarea {
+    font-size: 16px;
+  }
+}

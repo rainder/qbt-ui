@@ -6,6 +6,7 @@ import { ProgressBar } from '@/components/List/ProgressBar';
 import { Select } from '@/components/ui/Select';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
+import { useIsMobile } from '@/hooks/useIsMobile';
 
 const PRIORITY_OPTIONS: { value: FilePriorityValue; label: string }[] = [
   { value: FilePriority.Skip,    label: 'Skip' },
@@ -18,6 +19,7 @@ const KNOWN_PRIORITIES = new Set<number>(PRIORITY_OPTIONS.map((p) => p.value));
 
 export function FilesTab({ hash }: { hash: string }) {
   const qc = useQueryClient();
+  const isMobile = useIsMobile();
   const q = useQuery({
     queryKey: ['files', hash],
     queryFn: () => fetchFiles(hash),
@@ -63,6 +65,76 @@ export function FilesTab({ hash }: { hash: string }) {
 
   if (q.isLoading) return <div className="text-fg-muted text-sm">Loading files…</div>;
   if (q.error) return <div className="text-danger-fg text-sm">{(q.error as Error).message}</div>;
+
+  if (isMobile) {
+    return (
+      <div className="flex flex-col gap-2">
+        {(q.data ?? []).map((f) => {
+          const value: FilePriorityValue = KNOWN_PRIORITIES.has(f.priority)
+            ? (f.priority as FilePriorityValue)
+            : FilePriority.Normal;
+          const isEditing = editingIndex === f.index;
+          return (
+            <div key={f.index} className="border border-border-muted rounded-md p-3 flex flex-col gap-2">
+              <div className="flex items-start gap-2">
+                <div className="flex-1 min-w-0 text-sm text-fg-default break-words">
+                  {isEditing ? (
+                    <Input
+                      density="sm"
+                      fullWidth
+                      autoFocus
+                      value={editingValue}
+                      onChange={(e) => setEditingValue(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') { e.preventDefault(); void confirmEdit(); }
+                        if (e.key === 'Escape') { e.preventDefault(); cancelEdit(); }
+                      }}
+                      onBlur={() => cancelEdit()}
+                    />
+                  ) : (
+                    f.name
+                  )}
+                </div>
+                <div className="shrink-0 tabular-nums text-xs text-fg-muted whitespace-nowrap">
+                  {formatBytes(f.size)}
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="flex-1"><ProgressBar value={f.progress} complete={f.progress >= 1} /></div>
+                <div className="shrink-0 tabular-nums text-xs text-fg-muted w-9 text-right">
+                  {(f.progress * 100).toFixed(0)}%
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <Select
+                  density="sm"
+                  value={value}
+                  onChange={(e) => {
+                    const next = Number(e.target.value) as FilePriorityValue;
+                    void changePriority(f.index, next);
+                  }}
+                >
+                  {PRIORITY_OPTIONS.map((p) => (
+                    <option key={p.value} value={p.value}>{p.label}</option>
+                  ))}
+                </Select>
+                {!isEditing && (
+                  <Button
+                    variant="default"
+                    density="sm"
+                    className="ml-auto"
+                    onClick={() => startEdit(f.index, f.name)}
+                  >
+                    Rename
+                  </Button>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
 
   return (
     <table className="w-full">

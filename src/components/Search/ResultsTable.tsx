@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import type { SearchResult } from '@/api/types';
 import { formatBytes } from '@/lib/format';
 import { Button } from '@/components/ui/Button';
+import { useIsMobile } from '@/hooks/useIsMobile';
 
 type SortKey = 'fileName' | 'fileSize' | 'nbSeeders' | 'nbLeechers' | 'siteUrl';
 type SortDir = 'asc' | 'desc';
@@ -20,6 +21,7 @@ export function ResultsTable({
   results: SearchResult[];
   onAdd: (url: string) => void;
 }) {
+  const isMobile = useIsMobile();
   const [sortKey, setSortKey] = useState<SortKey>('nbSeeders');
   const [sortDir, setSortDir] = useState<SortDir>('desc');
 
@@ -37,6 +39,34 @@ export function ResultsTable({
       return String(av).localeCompare(String(bv)) * factor;
     });
   }, [results, sortKey, sortDir]);
+
+  if (isMobile) {
+    return (
+      <div className="flex flex-col">
+        <div className="sticky top-0 z-10 bg-canvas-subtle border-b border-border-default flex items-center gap-1 px-2 py-1.5 text-xs text-fg-muted overflow-x-auto">
+          <span className="shrink-0 mr-1">Sort:</span>
+          {COLS.map((c) => (
+            <button
+              key={c.key}
+              onClick={() => toggleSort(c.key)}
+              className={[
+                'shrink-0 px-2 py-0.5 rounded transition-colors',
+                sortKey === c.key
+                  ? 'bg-accent-subtle text-fg-default'
+                  : 'hover:text-fg-default',
+              ].join(' ')}
+            >
+              {c.label}
+              {sortKey === c.key && <span className="ml-1">{sortDir === 'asc' ? '▲' : '▼'}</span>}
+            </button>
+          ))}
+        </div>
+        {sorted.map((r, i) => (
+          <ResultCard key={i} r={r} onAdd={onAdd} />
+        ))}
+      </div>
+    );
+  }
 
   return (
     <table className="w-full text-sm">
@@ -99,5 +129,42 @@ export function ResultsTable({
         ))}
       </tbody>
     </table>
+  );
+}
+
+function ResultCard({ r, onAdd }: { r: SearchResult; onAdd: (url: string) => void }) {
+  let host = '';
+  try { host = new URL(r.siteUrl).hostname; } catch { host = r.siteUrl; }
+  return (
+    <div className="flex flex-col gap-1.5 px-3 py-2 border-b border-border-muted">
+      <div className="flex items-start gap-2 min-w-0">
+        <div className="flex-1 text-sm font-medium text-fg-default break-words">{r.fileName}</div>
+        <div className="shrink-0 tabular-nums text-xs text-fg-muted whitespace-nowrap">
+          {r.fileSize > 0 ? formatBytes(r.fileSize) : '—'}
+        </div>
+      </div>
+      <div className="flex items-center gap-3 text-xs min-w-0">
+        <span className="tabular-nums text-success-fg font-semibold whitespace-nowrap">S {r.nbSeeders}</span>
+        <span className="tabular-nums text-attention-fg font-semibold whitespace-nowrap">L {r.nbLeechers}</span>
+        <a
+          href={r.descrLink}
+          target="_blank"
+          rel="noreferrer"
+          className="truncate text-fg-muted hover:text-fg-default"
+        >
+          {host}
+        </a>
+        <span className="ml-auto shrink-0">
+          <Button
+            variant="ghost"
+            density="sm"
+            className="text-accent-fg hover:bg-accent-subtle"
+            onClick={() => onAdd(r.fileUrl)}
+          >
+            + Add
+          </Button>
+        </span>
+      </div>
+    </div>
   );
 }

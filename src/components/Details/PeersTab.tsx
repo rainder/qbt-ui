@@ -1,8 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 import { fetchPeers } from '@/api/torrents';
 import { formatSpeed } from '@/lib/format';
+import { useIsMobile } from '@/hooks/useIsMobile';
 
 export function PeersTab({ hash }: { hash: string }) {
+  const isMobile = useIsMobile();
   const q = useQuery({
     queryKey: ['peers', hash],
     queryFn: () => fetchPeers(hash),
@@ -11,6 +13,33 @@ export function PeersTab({ hash }: { hash: string }) {
   if (q.isLoading) return <div className="text-fg-muted text-sm">Loading peers…</div>;
   if (q.error) return <div className="text-danger-fg text-sm">{(q.error as Error).message}</div>;
   const peers = Object.values(q.data?.peers ?? {});
+
+  if (isMobile) {
+    if (peers.length === 0) return <div className="text-fg-muted text-sm">No peers</div>;
+    return (
+      <div className="flex flex-col gap-2">
+        {peers.map((p, i) => (
+          <div key={i} className="border border-border-muted rounded-md p-3 flex flex-col gap-1.5">
+            <div className="flex items-start gap-2">
+              <div className="flex-1 min-w-0 text-sm font-medium text-fg-default tabular-nums break-all">
+                {p.ip}:{p.port}
+              </div>
+              <div className="shrink-0 tabular-nums text-xs text-fg-muted">
+                {(p.progress * 100).toFixed(0)}%
+              </div>
+            </div>
+            <div className="text-xs text-fg-muted truncate">{p.client || '—'}</div>
+            <div className="flex items-center gap-3 text-xs">
+              <span className="tabular-nums text-fg-default whitespace-nowrap">↓ {formatSpeed(p.dl_speed)}</span>
+              <span className="tabular-nums text-fg-default whitespace-nowrap">↑ {formatSpeed(p.up_speed)}</span>
+              {p.flags && <span className="ml-auto text-fg-muted">{p.flags}</span>}
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
   return (
     <table className="w-full">
       <thead>

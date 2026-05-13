@@ -44,7 +44,7 @@ export function AddTorrent({ initialUrl = '', initialFiles, categories, onClose 
 
   return (
     <Modal title="Add torrent" onClose={close}>
-      <form onSubmit={submit} className="space-y-4 w-[28rem]">
+      <form onSubmit={submit} className="space-y-4 w-full sm:w-[28rem]">
         <div>
           <label className="block text-sm font-medium text-fg-default mb-1">
             URLs / Magnets <span className="text-fg-muted font-normal">(one per line)</span>
@@ -69,7 +69,7 @@ export function AddTorrent({ initialUrl = '', initialFiles, categories, onClose 
           />
         </div>
 
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <label className="block text-sm font-medium text-fg-default mb-1">Category</label>
             <Select

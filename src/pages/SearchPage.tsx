@@ -52,9 +52,11 @@ export default function SearchPage() {
       <SearchBar onStart={start} />
       {running && <div className="loading-bar" aria-label="Loading search results" />}
       {error && <div className="text-danger-fg px-4 py-2 text-sm">{error}</div>}
-      <div className="px-4 py-2 text-fg-muted text-xs">
-        {running ? `Searching… ${results.length} results so far` : results.length ? `${results.length} results` : 'Enter a query above'}
-      </div>
+      {(running || results.length > 0) && (
+        <div className="px-4 py-2 text-fg-muted text-xs">
+          {running ? `Searching… ${results.length} results so far` : `${results.length} results`}
+        </div>
+      )}
       <div className="flex-1 overflow-auto pb-safe">
         <ResultsTable results={results} onAdd={add} />
       </div>

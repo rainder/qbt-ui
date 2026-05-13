@@ -15,23 +15,23 @@ export function Modal({ title, children, onClose }: {
 
   return (
     <div
-      className="fixed inset-0 z-50 grid place-items-center"
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6"
       style={{ backgroundColor: 'rgba(1,4,9,0.8)' }}
       onClick={onClose}
     >
       <div
-        className="bg-canvas border border-border-default rounded-md shadow-2xl min-w-96 max-w-2xl"
+        className="bg-canvas border border-border-default rounded-md shadow-2xl w-full max-w-2xl max-h-full flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="h-12 px-4 border-b border-border-default flex items-center justify-between">
-          <span className="text-base font-semibold text-fg-default">{title}</span>
-          <button onClick={onClose} className="hover:text-fg-default text-fg-muted">
+        <div className="h-12 px-4 border-b border-border-default flex items-center justify-between shrink-0">
+          <span className="text-base font-semibold text-fg-default truncate pr-2">{title}</span>
+          <button onClick={onClose} className="hover:text-fg-default text-fg-muted shrink-0">
             <Kbd>esc</Kbd>
           </button>
         </div>
         {/* Body */}
-        <div className="p-4">{children}</div>
+        <div className="p-4 overflow-y-auto">{children}</div>
       </div>
     </div>
   );
