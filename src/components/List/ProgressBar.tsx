@@ -1,8 +1,8 @@
-export function ProgressBar({ value, complete }: { value: number; complete?: boolean }) {
+export function ProgressBar({ value, complete, thin }: { value: number; complete?: boolean; thin?: boolean }) {
   const pct = Math.max(0, Math.min(1, value)) * 100;
   return (
     <div
-      className="w-full h-1.5 bg-canvas-inset border border-border-muted rounded-full overflow-hidden"
+      className={`w-full ${thin ? 'h-1' : 'h-1.5 border border-border-muted'} bg-canvas-inset rounded-full overflow-hidden`}
       aria-label="progress"
       role="progressbar"
       aria-valuenow={pct}

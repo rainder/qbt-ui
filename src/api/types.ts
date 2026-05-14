@@ -1,7 +1,7 @@
 export type TorrentState =
-  | 'error' | 'missingFiles' | 'uploading' | 'pausedUP' | 'queuedUP'
+  | 'error' | 'missingFiles' | 'uploading' | 'pausedUP' | 'stoppedUP' | 'queuedUP'
   | 'stalledUP' | 'checkingUP' | 'forcedUP' | 'allocating' | 'downloading'
-  | 'metaDL' | 'pausedDL' | 'queuedDL' | 'stalledDL' | 'checkingDL'
+  | 'metaDL' | 'pausedDL' | 'stoppedDL' | 'queuedDL' | 'stalledDL' | 'checkingDL'
   | 'forcedDL' | 'checkingResumeData' | 'moving' | 'unknown';
 
 export interface Torrent {

@@ -85,7 +85,7 @@ function MobileDetailsView({
 }) {
   const hash = torrent.hash;
   const sel = hash ? [hash] : [];
-  const isPaused = (torrent.state ?? '').startsWith('paused');
+  const isPaused = (torrent.state ?? '').startsWith('paused') || (torrent.state ?? '').startsWith('stopped');
 
   const moreBtnRef = useRef<HTMLButtonElement>(null);
   const [menuPos, setMenuPos] = useState<{ x: number; y: number } | null>(null);

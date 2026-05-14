@@ -11,10 +11,10 @@ export interface FilterArgs {
 const STATUS_GROUPS: Record<Exclude<StatusFilter, 'all'>, Torrent['state'][]> = {
   downloading: ['downloading', 'forcedDL', 'metaDL', 'stalledDL', 'queuedDL', 'checkingDL', 'allocating'],
   seeding:     ['uploading', 'forcedUP', 'stalledUP', 'queuedUP', 'checkingUP'],
-  paused:      ['pausedDL', 'pausedUP'],
-  completed:   ['uploading', 'forcedUP', 'stalledUP', 'pausedUP', 'queuedUP'],
+  paused:      ['pausedDL', 'pausedUP', 'stoppedDL', 'stoppedUP'],
+  completed:   ['uploading', 'forcedUP', 'stalledUP', 'pausedUP', 'stoppedUP', 'queuedUP'],
   active:      ['downloading', 'forcedDL', 'uploading', 'forcedUP', 'metaDL'],
-  inactive:    ['pausedDL', 'pausedUP', 'stalledDL', 'stalledUP', 'queuedDL', 'queuedUP'],
+  inactive:    ['pausedDL', 'pausedUP', 'stoppedDL', 'stoppedUP', 'stalledDL', 'stalledUP', 'queuedDL', 'queuedUP'],
   errored:     ['error', 'missingFiles'],
 };
 

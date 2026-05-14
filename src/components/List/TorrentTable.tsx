@@ -49,7 +49,7 @@ export function TorrentTable({ rows }: { rows: Partial<Torrent>[] }) {
 
   const v = useWindowVirtualizer({
     count: rows.length,
-    estimateSize: () => (isMobile ? 84 : 44),
+    estimateSize: () => (isMobile ? 52 : 44),
     overscan: 16,
     scrollMargin,
   });
@@ -193,10 +193,15 @@ export function TorrentTable({ rows }: { rows: Partial<Torrent>[] }) {
             const t = rows[vi.index];
             const hash = t.hash!;
             return (
-              <div key={hash} style={{
-                position: 'absolute', top: 0, left: 0, right: 0,
-                transform: `translateY(${vi.start - scrollMargin}px)`,
-              }}>
+              <div
+                key={hash}
+                ref={isMobile ? v.measureElement : undefined}
+                data-index={vi.index}
+                style={{
+                  position: 'absolute', top: 0, left: 0, right: 0,
+                  transform: `translateY(${vi.start - scrollMargin}px)`,
+                }}
+              >
                 {isMobile ? (
                   <TorrentCard
                     t={t}

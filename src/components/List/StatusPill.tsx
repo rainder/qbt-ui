@@ -17,6 +17,8 @@ const MAP: Record<TorrentState, { label: string; variant: BadgeVariant }> = {
   checkingUP:         { label: 'Check', variant: 'attention' },
   pausedDL:           { label: 'Pause', variant: 'neutral' },
   pausedUP:           { label: 'Pause', variant: 'neutral' },
+  stoppedDL:          { label: 'Pause', variant: 'neutral' },
+  stoppedUP:          { label: 'Pause', variant: 'neutral' },
   allocating:         { label: 'Alloc', variant: 'attention' },
   moving:             { label: 'Move',  variant: 'attention' },
   checkingResumeData: { label: 'Check', variant: 'attention' },
