@@ -1,11 +1,10 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import clsx from 'clsx';
 import { useUi } from '@/stores/ui';
 import { useSync } from '@/hooks/useSync';
 import { useStats } from '@/hooks/useStats';
-import { formatSpeed, formatBytes, formatRatio } from '@/lib/format';
-import { toggleSpeedLimitsMode } from '@/api/transfer';
+import { useSpeedHistoryStore } from '@/stores/speedHistory';
 
 /**
  * Floating bottom pill bar shown only on mobile-sized viewports.
@@ -19,25 +18,19 @@ export function MobileBottomBar() {
   const { state } = useSync();
   const stats = useStats(state.serverState);
 
-  const [moreOpen, setMoreOpen] = useState(false);
-  const moreRef = useRef<HTMLDivElement>(null);
-
+  // Record speed samples globally so the chart on /more (and the desktop
+  // sparklines) keep accumulating data across page navigations. This bar is
+  // mounted under AuthGate at all viewport sizes (just visually `md:hidden`
+  // on desktop), so it's a stable place to record from. Depend on `rid`
+  // (increments every successful poll) so we record even when speeds stay
+  // at 0 across ticks.
   useEffect(() => {
-    if (!moreOpen) return;
-    function down(e: MouseEvent | TouchEvent) {
-      if (moreRef.current && !moreRef.current.contains(e.target as Node)) setMoreOpen(false);
-    }
-    document.addEventListener('mousedown', down);
-    document.addEventListener('touchstart', down);
-    return () => {
-      document.removeEventListener('mousedown', down);
-      document.removeEventListener('touchstart', down);
-    };
-  }, [moreOpen]);
+    useSpeedHistoryStore.getState().push(stats.dlSpeed, stats.upSpeed);
+  }, [state.rid, stats.dlSpeed, stats.upSpeed]);
 
   const isHome = loc.pathname === '/';
   const isSearch = loc.pathname === '/search';
-  const altRate = state.serverState?.use_alt_speed_limits ?? false;
+  const isMore = loc.pathname === '/more';
 
   const connDot = {
     connected: 'bg-success-fg',
@@ -89,51 +82,9 @@ export function MobileBottomBar() {
           <FiltersIcon />
         </ActionTab>
 
-        <div ref={moreRef} className="relative flex-1 max-w-[64px] flex justify-center">
-          <ActionTab
-            label="More"
-            onClick={() => setMoreOpen((v) => !v)}
-            aria-expanded={moreOpen}
-          >
-            <MoreIcon />
-          </ActionTab>
-          {moreOpen && (
-            <div
-              role="menu"
-              className={clsx(
-                'absolute right-0 bottom-full mb-3 min-w-56',
-                'rounded-xl border border-border-default bg-canvas shadow-lg p-1',
-                'pointer-events-auto',
-              )}
-            >
-              <div className="px-3 py-2 border-b border-border-muted">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className={clsx('w-2 h-2 rounded-full', connDot)} />
-                  <span className="text-xs text-fg-muted capitalize">{stats.connection}</span>
-                </div>
-                <div className="grid grid-cols-2 gap-y-0.5 text-xs">
-                  <StatRow label="↓" value={formatSpeed(stats.dlSpeed)} />
-                  <StatRow label="↑" value={formatSpeed(stats.upSpeed)} />
-                  <StatRow label="ratio" value={formatRatio(stats.ratio)} />
-                  <StatRow label="free" value={formatBytes(stats.freeSpace)} />
-                </div>
-              </div>
-              <MenuLink to="/settings" onClick={() => setMoreOpen(false)}>
-                Settings
-              </MenuLink>
-              <MenuItem onClick={() => { openModal('log'); setMoreOpen(false); }}>
-                Log
-              </MenuItem>
-              <MenuItem onClick={() => { void toggleSpeedLimitsMode(); setMoreOpen(false); }}>
-                <span className="mr-2">🐢</span>
-                Alt-rate{altRate ? ' (on)' : ''}
-              </MenuItem>
-              <MenuItem onClick={() => { openModal('help'); setMoreOpen(false); }}>
-                Shortcuts
-              </MenuItem>
-            </div>
-          )}
-        </div>
+        <NavTab to="/more" active={isMore} label="More">
+          <MoreIcon />
+        </NavTab>
       </div>
     </div>
   );
@@ -162,19 +113,17 @@ function NavTab({
 }
 
 function ActionTab({
-  label, onClick, emphasized, children, 'aria-expanded': ariaExpanded,
+  label, onClick, emphasized, children,
 }: {
   label: string;
   onClick: () => void;
   emphasized?: boolean;
   children: React.ReactNode;
-  'aria-expanded'?: boolean;
 }) {
   return (
     <button
       type="button"
       aria-label={label}
-      aria-expanded={ariaExpanded}
       onClick={onClick}
       className={clsx(
         'inline-flex items-center justify-center flex-1 h-11 max-w-[64px] rounded-full transition-colors',
@@ -185,41 +134,6 @@ function ActionTab({
     >
       {children}
     </button>
-  );
-}
-
-function MenuLink({ to, onClick, children }: { to: string; onClick: () => void; children: React.ReactNode }) {
-  return (
-    <Link
-      to={to}
-      onClick={onClick}
-      role="menuitem"
-      className="block px-3 py-2 text-sm rounded-md text-fg-default hover:bg-canvas-subtle"
-    >
-      {children}
-    </Link>
-  );
-}
-
-function MenuItem({ onClick, children }: { onClick: () => void; children: React.ReactNode }) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      role="menuitem"
-      className="w-full text-left block px-3 py-2 text-sm rounded-md text-fg-default hover:bg-canvas-subtle"
-    >
-      {children}
-    </button>
-  );
-}
-
-function StatRow({ label, value }: { label: string; value: string }) {
-  return (
-    <>
-      <span className="text-fg-muted">{label}</span>
-      <span className="font-semibold tabular-nums text-fg-default text-right">{value}</span>
-    </>
   );
 }
 

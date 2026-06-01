@@ -16,7 +16,7 @@ export function TopBar({ serverState }: { serverState?: ServerState }) {
   const stats = useStats(serverState);
   const { openModal, setFilterText, filterText } = useUi();
   const loc = useLocation();
-  const history = useSpeedHistory({ dl: stats.dlSpeed, up: stats.upSpeed });
+  const history = useSpeedHistory();
 
   const connectionDotCls = {
     connected: 'bg-success-fg',

@@ -10,6 +10,7 @@ import LoginPage from './pages/LoginPage';
 import TorrentListPage from './pages/TorrentListPage';
 import SearchPage from './pages/SearchPage';
 import SettingsPage from './pages/SettingsPage';
+import MorePage from './pages/MorePage';
 
 const qc = new QueryClient({ defaultOptions: { queries: { staleTime: 5_000, retry: false } } });
 
@@ -61,6 +62,7 @@ export function App() {
             <Route path="/" element={<TorrentListPage />} />
             <Route path="/search" element={<SearchPage />} />
             <Route path="/settings/*" element={<SettingsPage />} />
+            <Route path="/more" element={<MorePage />} />
           </Route>
         </Routes>
       </BrowserRouter>

@@ -75,7 +75,7 @@ export function SettingsLayout({ pluginsTab }: { pluginsTab: React.ReactNode }) 
         )}
         {/* Content — flows in the document, no internal scroll. */}
         <div
-          className="flex-1 px-6 pb-mobile-nav max-w-3xl"
+          className="flex-1 min-w-0 px-4 md:px-6 pb-mobile-nav max-w-3xl"
           style={{ paddingTop: 'calc(env(safe-area-inset-top) + 1.5rem)' }}
         >
           <Routes>

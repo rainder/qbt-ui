@@ -59,22 +59,24 @@ export function PrefsTab({ fields }: { fields: FieldDef[] }) {
         }
         const display = f.divisor && typeof v === 'number' ? v / f.divisor : v;
         return (
-          <div key={f.key} className="flex items-center gap-4">
-            <label className="w-64 text-sm font-medium text-fg-default">{f.label}</label>
-            <Input
-              type={f.type === 'number' ? 'number' : 'text'}
-              value={String(display ?? '')}
-              onChange={(e) => {
-                let next: unknown = e.target.value;
-                if (f.type === 'number') {
-                  const n = Number(e.target.value);
-                  next = f.divisor ? n * f.divisor : n;
-                }
-                update(f.key, next);
-              }}
-              className="w-48"
-            />
-            {f.unit && <span className="text-fg-muted text-sm">{f.unit}</span>}
+          <div key={f.key} className="flex flex-col gap-1 md:flex-row md:items-center md:gap-4">
+            <label className="text-sm font-medium text-fg-default md:w-64">{f.label}</label>
+            <div className="flex items-center gap-2">
+              <Input
+                type={f.type === 'number' ? 'number' : 'text'}
+                value={String(display ?? '')}
+                onChange={(e) => {
+                  let next: unknown = e.target.value;
+                  if (f.type === 'number') {
+                    const n = Number(e.target.value);
+                    next = f.divisor ? n * f.divisor : n;
+                  }
+                  update(f.key, next);
+                }}
+                className="w-full md:w-48"
+              />
+              {f.unit && <span className="text-fg-muted text-sm shrink-0">{f.unit}</span>}
+            </div>
           </div>
         );
       })}
